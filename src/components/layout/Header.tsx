@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, ShoppingBag, Heart, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet';
@@ -10,6 +11,7 @@ import { gsap } from 'gsap';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
@@ -100,15 +102,22 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav ref={navRef} className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-pink-600 transition-colors duration-200 font-medium"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`transition-colors duration-200 font-medium ${
+                    isActive 
+                      ? 'text-pink-600 border-b-2 border-pink-600 pb-1' 
+                      : 'text-gray-700 hover:text-pink-600'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Desktop Actions */}
@@ -143,16 +152,23 @@ const Header = () => {
                   <SheetTitle>Navigation Menu</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col space-y-4 mt-8">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="text-lg font-medium text-gray-700 hover:text-pink-600 transition-colors duration-200 py-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  {navigation.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`text-lg font-medium transition-colors duration-200 py-2 ${
+                          isActive 
+                            ? 'text-pink-600 bg-pink-50 px-3 rounded-md' 
+                            : 'text-gray-700 hover:text-pink-600'
+                        }`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    );
+                  })}
                   <div className="flex items-center space-x-4 pt-4 border-t">
                     <Button variant="ghost" size="icon" className="text-gray-700 hover:text-pink-600">
                       <Heart className="h-5 w-5" />
