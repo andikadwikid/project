@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, Star, ShoppingBag } from 'lucide-react';
@@ -5,12 +7,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Product } from '@/types/product';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -19,11 +27,68 @@ const ProductCard = ({ product }: ProductCardProps) => {
     }).format(price);
   };
 
+  useEffect(() => {
+    const card = cardRef.current;
+    const image = imageRef.current;
+    const content = contentRef.current;
+
+    if (!card || !image || !content) return;
+
+    // Set initial state
+    gsap.set(card, { opacity: 0, y: 30 });
+
+    // Entrance animation
+    gsap.to(card, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out",
+      delay: Math.random() * 0.3 // Stagger effect
+    });
+
+    // Hover animations
+    const handleMouseEnter = () => {
+      gsap.to(image, {
+        scale: 1.05,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+      gsap.to(card, {
+        y: -5,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(image, {
+        scale: 1,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+      gsap.to(card, {
+        y: 0,
+        boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    };
+
+    card.addEventListener('mouseenter', handleMouseEnter);
+    card.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      card.removeEventListener('mouseenter', handleMouseEnter);
+      card.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
   return (
-    <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-white">
+    <Card ref={cardRef} className="group overflow-hidden border-0 shadow-sm transition-all duration-300 bg-white">
       <CardContent className="p-0">
         {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50">
+        <div ref={imageRef} className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50">
           <Image
             src={product.image}
             alt={product.name}
@@ -66,7 +131,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         {/* Product Info */}
-        <div className="p-4 space-y-3">
+        <div ref={contentRef} className="p-4 space-y-3">
           {/* Brand */}
           <p className="text-xs font-medium text-pink-600 uppercase tracking-wide">
             {product.brand}

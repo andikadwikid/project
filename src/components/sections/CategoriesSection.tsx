@@ -1,15 +1,102 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { categories } from '@/data/products';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CategoriesSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const categoriesRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const title = titleRef.current;
+    const categoriesGrid = categoriesRef.current;
+    const features = featuresRef.current;
+
+    if (!section || !title || !categoriesGrid || !features) return;
+
+    // Set initial states
+    gsap.set([title], { opacity: 0, y: 50 });
+    gsap.set(categoriesGrid.children, { opacity: 0, y: 30, scale: 0.9 });
+    gsap.set(features.children, { opacity: 0, y: 40 });
+
+    // Categories animation
+    const categoriesTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+        end: "center center",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    categoriesTl.to(title, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out"
+    })
+      .to(categoriesGrid.children, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        ease: "back.out(1.7)",
+        stagger: 0.15
+      }, "-=0.4");
+
+    // Features animation
+    const featuresTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: features,
+        start: "top 85%",
+        end: "bottom 20%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    featuresTl.to(features.children, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out",
+      stagger: 0.2
+    });
+
+    // Parallax effect for category cards
+    gsap.utils.toArray<Element>('.category-card').forEach((card) => {
+      gsap.to(card, {
+        yPercent: -10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: card,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
   return (
-    <section className="py-16 bg-gradient-to-br from-pink-50 to-rose-50">
+    <section ref={sectionRef} className="py-16 bg-gradient-to-br from-pink-50 to-rose-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center space-y-4 mb-12">
+        <div ref={titleRef} className="text-center space-y-4 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
             Shop by <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Category</span>
           </h2>
@@ -19,10 +106,10 @@ const CategoriesSection = () => {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div ref={categoriesRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link key={category.id} href={`/catalog?category=${category.slug}`}>
-              <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white h-full">
+              <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white h-full category-card">
                 <CardContent className="p-0">
                   {/* Image Container */}
                   <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-100 to-rose-100">
@@ -68,7 +155,7 @@ const CategoriesSection = () => {
 
         {/* Additional Info */}
         <div className="mt-16 text-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div ref={featuresRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="space-y-3">
               <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center mx-auto">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,9 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { Heart, Award, Users, Sparkles, Star, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const AboutPage = () => {
+
   const values = [
     {
       icon: Heart,
@@ -163,7 +166,7 @@ const AboutPage = () => {
             {values.map((value, index) => {
               const IconComponent = value.icon;
               return (
-                <Card key={index} className="text-center border-0 shadow-sm hover:shadow-lg transition-all duration-300">
+                <Card key={index} className="value-card text-center border-0 shadow-sm hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-6 space-y-4">
                     <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center mx-auto">
                       <IconComponent className="h-8 w-8 text-white" />
@@ -196,7 +199,7 @@ const AboutPage = () => {
 
             <div className="space-y-8">
               {milestones.map((milestone, index) => (
-                <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                <div key={index} className={`milestone-card flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                   <div className={`flex-1 ${index % 2 === 0 ? 'md:text-right md:pr-8' : 'md:text-left md:pl-8'}`}>
                     <Card className="border-0 shadow-sm hover:shadow-lg transition-all duration-300">
                       <CardContent className="p-6">
@@ -236,7 +239,7 @@ const AboutPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {team.map((member, index) => (
-              <Card key={index} className="text-center border-0 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+              <Card key={index} className="team-card text-center border-0 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <CardContent className="p-0">
                   <div className="aspect-square bg-gradient-to-br from-pink-100 to-rose-100 overflow-hidden">
                     <Image

@@ -1,18 +1,87 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 
 const HeroSection = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tl = gsap.timeline();
+
+    // Set initial states
+    gsap.set([titleRef.current, subtitleRef.current, buttonsRef.current, statsRef.current], {
+      opacity: 0,
+      y: 50
+    });
+    gsap.set(imageRef.current, {
+      opacity: 0,
+      scale: 0.8,
+      rotation: -10
+    });
+
+    // Animate elements in sequence
+    tl.to(titleRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out"
+    })
+    .to(subtitleRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out"
+    }, "-=0.5")
+    .to(buttonsRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out"
+    }, "-=0.4")
+    .to(statsRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out"
+    }, "-=0.4")
+    .to(imageRef.current, {
+      opacity: 1,
+      scale: 1,
+      rotation: 0,
+      duration: 1.2,
+      ease: "elastic.out(1, 0.5)"
+    }, "-=0.8");
+
+    // Floating animation for decorative elements
+    gsap.to(".floating-element", {
+      y: -20,
+      duration: 2,
+      ease: "power2.inOut",
+      yoyo: true,
+      repeat: -1,
+      stagger: 0.3
+    });
+  }, []);
+
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+    <section ref={heroRef} className="relative min-h-[80vh] flex items-center overflow-hidden">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50" />
 
       {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse" />
-      <div className="absolute bottom-32 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30 animate-pulse delay-1000" />
-      <div className="absolute top-1/2 right-10 w-12 h-12 bg-purple-200 rounded-full opacity-25 animate-pulse delay-500" />
+      <div className="floating-element absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20" />
+      <div className="floating-element absolute bottom-32 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30" />
+      <div className="floating-element absolute top-1/2 right-10 w-12 h-12 bg-purple-200 rounded-full opacity-25" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -26,7 +95,7 @@ const HeroSection = () => {
 
             {/* Heading */}
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 bg-clip-text text-transparent">
                   Step Into
                 </span>
@@ -35,14 +104,14 @@ const HeroSection = () => {
                   Elegance
                 </span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-lg">
+              <p ref={subtitleRef} className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-lg">
                 Temukan koleksi sepatu wanita terbaik dengan desain feminin dan kualitas premium.
                 Dari high heels elegan hingga sneakers kasual yang stylish.
               </p>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
               <Button
                 asChild
                 size="lg"
@@ -66,7 +135,7 @@ const HeroSection = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-pink-100">
+            <div ref={statsRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-pink-100">
               <div className="text-center">
                 <div className="text-2xl md:text-3xl font-bold text-gray-900">500+</div>
                 <div className="text-sm text-gray-600">Products</div>
@@ -84,7 +153,7 @@ const HeroSection = () => {
 
           {/* Hero Image */}
           <div className="relative">
-            <div className="relative aspect-square max-w-lg mx-auto">
+            <div ref={imageRef} className="relative aspect-square max-w-lg mx-auto">
               {/* Background Circle */}
               <div className="absolute inset-0 bg-gradient-to-br from-pink-200 to-rose-300 rounded-full opacity-20" />
 
@@ -102,12 +171,12 @@ const HeroSection = () => {
               </div>
 
               {/* Floating Elements */}
-              <div className="absolute top-16 -left-4 bg-white rounded-lg shadow-lg p-3 animate-bounce z-20">
+              <div className="floating-element absolute top-16 -left-4 bg-white rounded-lg shadow-lg p-3 z-20">
                 <div className="text-xs font-semibold text-gray-900">Free Shipping</div>
                 <div className="text-xs text-gray-600">On orders over 500K</div>
               </div>
 
-              <div className="absolute bottom-20 -right-4 bg-white rounded-lg shadow-lg p-3 animate-bounce delay-1000 z-20">
+              <div className="floating-element absolute bottom-20 -right-4 bg-white rounded-lg shadow-lg p-3 z-20">
                 <div className="text-xs font-semibold text-gray-900">Premium Quality</div>
                 <div className="text-xs text-gray-600">Italian Craftsmanship</div>
               </div>

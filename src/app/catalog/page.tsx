@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,6 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import ProductCard from '@/components/sections/ProductCard';
 import { products, categories, brands } from '@/data/products';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CatalogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,6 +20,10 @@ const CatalogPage = () => {
   const [priceRange, setPriceRange] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('name');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
+  const heroRef = useRef<HTMLDivElement>(null);
+  const filtersRef = useRef<HTMLDivElement>(null);
+  const productsRef = useRef<HTMLDivElement>(null);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -66,6 +74,28 @@ const CatalogPage = () => {
 
     return filtered;
   }, [searchTerm, selectedCategory, selectedBrand, priceRange, sortBy]);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+
+    if (!hero) return;
+
+    // Hero section animation only
+    gsap.set(hero.children, { opacity: 0, y: 30 });
+    gsap.to(hero.children, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "power2.out"
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  // Removed filter animation effect
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -164,7 +194,7 @@ const CatalogPage = () => {
       {/* Header */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center space-y-4">
+          <div ref={heroRef} className="text-center space-y-4">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
               Our <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Collection</span>
             </h1>
@@ -195,7 +225,7 @@ const CatalogPage = () => {
           {/* Main Content */}
           <div className="flex-1">
             {/* Search and Sort Bar */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div ref={filtersRef} className="flex flex-col sm:flex-row gap-4 mb-6">
               {/* Search */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -204,7 +234,7 @@ const CatalogPage = () => {
                   placeholder="Search shoes, brands, categories..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
                 />
               </div>
 
@@ -233,7 +263,7 @@ const CatalogPage = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
               >
                 <option value="name">Sort by Name</option>
                 <option value="price-low">Price: Low to High</option>
@@ -282,9 +312,11 @@ const CatalogPage = () => {
 
             {/* Products Grid */}
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div ref={productsRef} className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <div key={product.id} className="product-card-wrapper">
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
             ) : (
