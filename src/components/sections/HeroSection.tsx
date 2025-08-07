@@ -8,12 +8,12 @@ const HeroSection = () => {
     <section className="relative min-h-[80vh] flex items-center overflow-hidden">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50" />
-      
+
       {/* Decorative Elements */}
       <div className="absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse" />
       <div className="absolute bottom-32 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30 animate-pulse delay-1000" />
       <div className="absolute top-1/2 right-10 w-12 h-12 bg-purple-200 rounded-full opacity-25 animate-pulse delay-500" />
-      
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
@@ -23,7 +23,7 @@ const HeroSection = () => {
               <Sparkles className="h-4 w-4 text-pink-500" />
               <span className="text-sm font-medium text-pink-700">New Collection 2024</span>
             </div>
-            
+
             {/* Heading */}
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
@@ -36,16 +36,16 @@ const HeroSection = () => {
                 </span>
               </h1>
               <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-lg">
-                Temukan koleksi sepatu wanita terbaik dengan desain feminin dan kualitas premium. 
+                Temukan koleksi sepatu wanita terbaik dengan desain feminin dan kualitas premium.
                 Dari high heels elegan hingga sneakers kasual yang stylish.
               </p>
             </div>
-            
+
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button 
-                asChild 
-                size="lg" 
+              <Button
+                asChild
+                size="lg"
                 className="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Link href="/catalog" className="inline-flex items-center">
@@ -53,9 +53,9 @@ const HeroSection = () => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button 
-                asChild 
-                variant="outline" 
+              <Button
+                asChild
+                variant="outline"
                 size="lg"
                 className="border-pink-200 text-pink-700 hover:bg-pink-50 hover:border-pink-300"
               >
@@ -64,7 +64,7 @@ const HeroSection = () => {
                 </Link>
               </Button>
             </div>
-            
+
             {/* Stats */}
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-pink-100">
               <div className="text-center">
@@ -81,16 +81,17 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Hero Image */}
           <div className="relative">
             <div className="relative aspect-square max-w-lg mx-auto">
               {/* Background Circle */}
               <div className="absolute inset-0 bg-gradient-to-br from-pink-200 to-rose-300 rounded-full opacity-20" />
-              
+
               {/* Main Image */}
               <div className="relative z-10 p-8">
                 <Image
+                  // src="/images/image1.jpeg"
                   src="/images/hero-shoes.svg"
                   alt="Elegant Women Shoes Collection"
                   width={500}
@@ -99,14 +100,14 @@ const HeroSection = () => {
                   priority
                 />
               </div>
-              
+
               {/* Floating Elements */}
-              <div className="absolute top-16 -left-4 bg-white rounded-lg shadow-lg p-3 animate-bounce">
+              <div className="absolute top-16 -left-4 bg-white rounded-lg shadow-lg p-3 animate-bounce z-20">
                 <div className="text-xs font-semibold text-gray-900">Free Shipping</div>
                 <div className="text-xs text-gray-600">On orders over 500K</div>
               </div>
-              
-              <div className="absolute bottom-20 -right-4 bg-white rounded-lg shadow-lg p-3 animate-bounce delay-1000">
+
+              <div className="absolute bottom-20 -right-4 bg-white rounded-lg shadow-lg p-3 animate-bounce delay-1000 z-20">
                 <div className="text-xs font-semibold text-gray-900">Premium Quality</div>
                 <div className="text-xs text-gray-600">Italian Craftsmanship</div>
               </div>

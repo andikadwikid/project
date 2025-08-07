@@ -19,14 +19,14 @@ const CatalogPage = () => {
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
-    let filtered = products.filter(product => {
+    const filtered = products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.category.toLowerCase().includes(searchTerm.toLowerCase());
-      
+        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesCategory = !selectedCategory || product.category === selectedCategory;
       const matchesBrand = !selectedBrand || product.brand === selectedBrand;
-      
+
       let matchesPrice = true;
       if (priceRange) {
         switch (priceRange) {
@@ -44,7 +44,7 @@ const CatalogPage = () => {
             break;
         }
       }
-      
+
       return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
     });
 
@@ -85,9 +85,8 @@ const CatalogPage = () => {
         <div className="space-y-2">
           <button
             onClick={() => setSelectedCategory('')}
-            className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-              !selectedCategory ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-            }`}
+            className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${!selectedCategory ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+              }`}
           >
             All Categories
           </button>
@@ -95,9 +94,8 @@ const CatalogPage = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.name)}
-              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                selectedCategory === category.name ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-              }`}
+              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedCategory === category.name ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+                }`}
             >
               {category.name}
             </button>
@@ -111,9 +109,8 @@ const CatalogPage = () => {
         <div className="space-y-2">
           <button
             onClick={() => setSelectedBrand('')}
-            className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-              !selectedBrand ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-            }`}
+            className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${!selectedBrand ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+              }`}
           >
             All Brands
           </button>
@@ -121,9 +118,8 @@ const CatalogPage = () => {
             <button
               key={brand.id}
               onClick={() => setSelectedBrand(brand.name)}
-              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                selectedBrand === brand.name ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-              }`}
+              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedBrand === brand.name ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+                }`}
             >
               {brand.name}
             </button>
@@ -145,9 +141,8 @@ const CatalogPage = () => {
             <button
               key={range.value}
               onClick={() => setPriceRange(range.value)}
-              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                priceRange === range.value ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-              }`}
+              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${priceRange === range.value ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+                }`}
             >
               {range.label}
             </button>
@@ -174,7 +169,7 @@ const CatalogPage = () => {
               Our <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Collection</span>
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover our complete range of elegant women's shoes designed for every occasion.
+              Discover our complete range of elegant women&apos;s shoes designed for every occasion.
             </p>
           </div>
         </div>

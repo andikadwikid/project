@@ -82,7 +82,7 @@ const AboutPage = () => {
       <section className="relative py-20 bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 overflow-hidden">
         <div className="absolute top-10 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse" />
         <div className="absolute bottom-20 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30 animate-pulse delay-1000" />
-        
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center space-y-6 max-w-4xl mx-auto">
             <Badge className="bg-pink-100 text-pink-700 hover:bg-pink-200">
@@ -93,7 +93,7 @@ const AboutPage = () => {
               <br />One Step at a Time
             </h1>
             <p className="text-xl text-gray-600 leading-relaxed">
-              We are passionate about creating beautiful, comfortable, and stylish shoes 
+              We are passionate about creating beautiful, comfortable, and stylish shoes
               that empower women to walk confidently through life.
             </p>
           </div>
@@ -110,17 +110,17 @@ const AboutPage = () => {
               </h2>
               <div className="space-y-4 text-gray-600 leading-relaxed">
                 <p>
-                  Femme Steps dimulai dari mimpi sederhana: menciptakan sepatu yang tidak hanya indah dipandang, 
-                  tetapi juga nyaman digunakan sepanjang hari. Kami percaya bahwa setiap wanita berhak merasa 
+                  Femme Steps dimulai dari mimpi sederhana: menciptakan sepatu yang tidak hanya indah dipandang,
+                  tetapi juga nyaman digunakan sepanjang hari. Kami percaya bahwa setiap wanita berhak merasa
                   percaya diri dan cantik dalam setiap langkahnya.
                 </p>
                 <p>
-                  Dengan pengalaman bertahun-tahun di industri fashion dan komitmen terhadap kualitas, 
-                  kami menghadirkan koleksi sepatu wanita yang menggabungkan desain feminin dengan 
+                  Dengan pengalaman bertahun-tahun di industri fashion dan komitmen terhadap kualitas,
+                  kami menghadirkan koleksi sepatu wanita yang menggabungkan desain feminin dengan
                   kenyamanan maksimal.
                 </p>
                 <p>
-                  Setiap pasang sepatu di Femme Steps dibuat dengan perhatian detail yang tinggi, 
+                  Setiap pasang sepatu di Femme Steps dibuat dengan perhatian detail yang tinggi,
                   menggunakan bahan-bahan premium dan teknik pembuatan yang telah teruji waktu.
                 </p>
               </div>
@@ -158,7 +158,7 @@ const AboutPage = () => {
               The principles that guide everything we do at Femme Steps.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value, index) => {
               const IconComponent = value.icon;
@@ -186,14 +186,14 @@ const AboutPage = () => {
               Our <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Journey</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Key milestones in our journey to becoming a trusted name in women's footwear.
+              Key milestones in our journey to becoming a trusted name in women&apos;s footwear.
             </p>
           </div>
-          
+
           <div className="relative">
             {/* Timeline Line */}
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-pink-200 to-rose-200 hidden md:block" />
-            
+
             <div className="space-y-8">
               {milestones.map((milestone, index) => (
                 <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
@@ -210,10 +210,10 @@ const AboutPage = () => {
                       </CardContent>
                     </Card>
                   </div>
-                  
+
                   {/* Timeline Dot */}
                   <div className="hidden md:flex w-4 h-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full border-4 border-white shadow-lg z-10" />
-                  
+
                   <div className="flex-1" />
                 </div>
               ))}
@@ -233,7 +233,7 @@ const AboutPage = () => {
               The passionate individuals behind Femme Steps who make it all possible.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {team.map((member, index) => (
               <Card key={index} className="text-center border-0 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
@@ -267,7 +267,7 @@ const AboutPage = () => {
               Why Choose <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Femme Steps</span>
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {

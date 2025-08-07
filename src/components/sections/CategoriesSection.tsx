@@ -14,7 +14,7 @@ const CategoriesSection = () => {
             Shop by <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Category</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our diverse collection of women's shoes, from elegant heels to comfortable flats.
+            Explore our diverse collection of women&apos;s shoes, from elegant heels to comfortable flats.
           </p>
         </div>
 
@@ -33,10 +33,10 @@ const CategoriesSection = () => {
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
-                    
+
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" />
-                    
+
                     {/* Category Name Overlay */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center text-white transform group-hover:scale-105 transition-transform duration-300">
@@ -50,7 +50,7 @@ const CategoriesSection = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Category Info */}
                   <div className="p-4">
                     <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-pink-600 transition-colors duration-200">
@@ -78,7 +78,7 @@ const CategoriesSection = () => {
               <h3 className="text-lg font-semibold text-gray-900">Premium Quality</h3>
               <p className="text-gray-600 text-sm">Crafted with the finest materials and attention to detail</p>
             </div>
-            
+
             <div className="space-y-3">
               <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center mx-auto">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@ const CategoriesSection = () => {
               <h3 className="text-lg font-semibold text-gray-900">Fast Delivery</h3>
               <p className="text-gray-600 text-sm">Quick and secure shipping to your doorstep</p>
             </div>
-            
+
             <div className="space-y-3">
               <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center mx-auto">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
