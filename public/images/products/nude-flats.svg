@@ -1,0 +1,27 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nudeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a16207;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="400" fill="#fffbeb"/>
+  
+  <!-- Ballet Flat -->
+  <g transform="translate(50, 180)">
+    <!-- Shoe Body -->
+    <path d="M30 60 Q30 40 60 40 L240 40 Q270 40 270 60 L270 80 Q270 100 240 100 L80 100 Q50 100 40 90 L30 80 Z" fill="url(#nudeGradient)"/>
+    
+    <!-- Sole -->
+    <ellipse cx="150" cy="100" rx="120" ry="8" fill="#92400e" opacity="0.6"/>
+    
+    <!-- Bow Detail -->
+    <path d="M140 55 Q150 45 160 55 Q150 65 140 55" fill="#a16207"/>
+    <circle cx="150" cy="55" r="2" fill="#92400e"/>
+    
+    <!-- Highlight -->
+    <ellipse cx="130" cy="50" rx="20" ry="4" fill="#ffffff" opacity="0.3"/>
+  </g>
+</svg>

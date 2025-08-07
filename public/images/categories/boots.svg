@@ -1,0 +1,30 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bootsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c2d12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#451a03;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="400" fill="linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)"/>
+  
+  <!-- Multiple Boots -->
+  <g transform="translate(60, 80)">
+    <!-- First Boot -->
+    <rect x="40" y="20" width="80" height="100" fill="url(#bootsGradient)" rx="8"/>
+    <path d="M20 120 Q20 100 50 100 L150 100 Q180 100 180 120 L180 140 Q180 160 150 160 L70 160 Q40 160 30 150 L20 140 Z" fill="url(#bootsGradient)"/>
+    <ellipse cx="100" cy="160" rx="80" ry="8" fill="#451a03" opacity="0.8"/>
+    <line x1="50" y1="30" x2="50" y2="110" stroke="#fbbf24" stroke-width="2"/>
+    
+    <!-- Second Boot -->
+    <g transform="translate(120, 30)">
+      <rect x="40" y="20" width="80" height="100" fill="#1f2937" rx="8"/>
+      <path d="M20 120 Q20 100 50 100 L150 100 Q180 100 180 120 L180 140 Q180 160 150 160 L70 160 Q40 160 30 150 L20 140 Z" fill="#1f2937"/>
+      <ellipse cx="100" cy="160" rx="80" ry="8" fill="#111827" opacity="0.8"/>
+    </g>
+  </g>
+  
+  <!-- Decorative Elements -->
+  <circle cx="320" cy="80" r="10" fill="#92400e" opacity="0.6"/>
+  <circle cx="80" cy="320" r="8" fill="#7c2d12" opacity="0.5"/>
+</svg>

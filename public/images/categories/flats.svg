@@ -1,0 +1,28 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="flatsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4a574;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="400" fill="linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)"/>
+  
+  <!-- Multiple Ballet Flats -->
+  <g transform="translate(40, 150)">
+    <!-- First Flat -->
+    <path d="M20 40 Q20 20 50 20 L200 20 Q230 20 230 40 L230 60 Q230 80 200 80 L70 80 Q40 80 30 70 L20 60 Z" fill="url(#flatsGradient)"/>
+    <ellipse cx="125" cy="80" rx="105" ry="6" fill="#92400e" opacity="0.6"/>
+    <path d="M115 35 Q125 25 135 35 Q125 45 115 35" fill="#a16207"/>
+    
+    <!-- Second Flat -->
+    <g transform="translate(80, 50)">
+      <path d="M20 40 Q20 20 50 20 L200 20 Q230 20 230 40 L230 60 Q230 80 200 80 L70 80 Q40 80 30 70 L20 60 Z" fill="#ec4899"/>
+      <ellipse cx="125" cy="80" rx="105" ry="6" fill="#be185d" opacity="0.6"/>
+    </g>
+  </g>
+  
+  <!-- Decorative Elements -->
+  <circle cx="320" cy="80" r="12" fill="#fbbf24" opacity="0.6"/>
+  <circle cx="80" cy="320" r="10" fill="#ec4899" opacity="0.4"/>
+</svg>

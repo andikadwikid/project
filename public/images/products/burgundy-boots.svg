@@ -1,0 +1,30 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="burgundyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#991b1b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7c2d12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#451a03;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="400" fill="#fef2f2"/>
+  
+  <!-- Ankle Boot -->
+  <g transform="translate(80, 100)">
+    <!-- Boot Shaft -->
+    <rect x="60" y="40" width="120" height="80" fill="url(#burgundyGradient)" rx="10"/>
+    
+    <!-- Boot Foot -->
+    <path d="M40 120 Q40 100 70 100 L200 100 Q230 100 230 120 L230 140 Q230 160 200 160 L90 160 Q60 160 50 150 L40 140 Z" fill="url(#burgundyGradient)"/>
+    
+    <!-- Sole -->
+    <ellipse cx="135" cy="160" rx="95" ry="8" fill="#451a03" opacity="0.8"/>
+    
+    <!-- Zipper -->
+    <line x1="70" y1="50" x2="70" y2="110" stroke="#fbbf24" stroke-width="2"/>
+    <rect x="68" y="48" width="4" height="6" fill="#fbbf24" rx="1"/>
+    
+    <!-- Highlight -->
+    <ellipse cx="120" cy="110" rx="20" ry="5" fill="#ffffff" opacity="0.2"/>
+  </g>
+</svg>
