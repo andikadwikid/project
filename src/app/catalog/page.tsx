@@ -312,7 +312,7 @@ const CatalogPage = () => {
 
             {/* Products Grid */}
             {filteredProducts.length > 0 ? (
-              <div ref={productsRef} className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div ref={productsRef} className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6">
                 {filteredProducts.map((product) => (
                   <div key={product.id} className="product-card-wrapper">
                     <ProductCard product={product} />
