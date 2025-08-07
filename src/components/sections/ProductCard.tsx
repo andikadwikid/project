@@ -85,8 +85,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
   }, []);
 
   return (
-    <Card ref={cardRef} className="group overflow-hidden border-0 shadow-sm transition-all duration-300 bg-white">
-      <CardContent className="p-0">
+    <Card ref={cardRef} className="group overflow-hidden border-0 shadow-sm transition-all duration-300 bg-white h-full flex flex-col">
+      <CardContent className="p-0 flex flex-col h-full">
         {/* Image Container */}
         <div ref={imageRef} className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50">
           <Image
@@ -131,39 +131,41 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         {/* Product Info */}
-        <div ref={contentRef} className="p-2 md:p-4 space-y-1 md:space-y-3">
-          {/* Brand - Hidden on mobile */}
-          <p className="hidden md:block text-xs font-medium text-pink-600 uppercase tracking-wide">
-            {product.brand}
-          </p>
+        <div ref={contentRef} className="p-2 md:p-4 flex-1 flex flex-col">
+          <div className="space-y-1 md:space-y-3 flex-1">
+            {/* Brand - Hidden on mobile */}
+            <p className="hidden md:block text-xs font-medium text-pink-600 uppercase tracking-wide">
+              {product.brand}
+            </p>
 
-          {/* Product Name */}
-          <Link href={`/product/${product.id}`}>
-            <h3 className="font-semibold text-gray-900 hover:text-pink-600 transition-colors duration-200 line-clamp-2 text-sm md:text-base">
-              {product.name}
-            </h3>
-          </Link>
+            {/* Product Name */}
+            <Link href={`/product/${product.id}`}>
+              <h3 className="font-semibold text-gray-900 hover:text-pink-600 transition-colors duration-200 line-clamp-2 text-sm md:text-base">
+                {product.name}
+              </h3>
+            </Link>
 
-          {/* Rating - Hidden on mobile */}
-          {product.rating && (
-            <div className="hidden md:flex items-center space-x-1">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-3 w-3 ${i < Math.floor(product.rating!)
+            {/* Rating - Hidden on mobile */}
+            {product.rating && (
+              <div className="hidden md:flex items-center space-x-1">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-3 w-3 ${i < Math.floor(product.rating!)
                         ? 'text-yellow-400 fill-current'
                         : 'text-gray-300'
-                      }`}
-                  />
-                ))}
+                        }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-500">({product.reviews})</span>
               </div>
-              <span className="text-xs text-gray-500">({product.reviews})</span>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Price */}
-          <div className="flex flex-col items-center space-x-2">
+          <div className="flex flex-col md:flex-row items-center space-x-2 h-8 justify-center md:justify-start mt-auto">
             <span className="text-sm md:text-lg font-bold text-gray-900">
               {formatPrice(product.price)}
             </span>
