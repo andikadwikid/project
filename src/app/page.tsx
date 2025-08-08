@@ -4,10 +4,16 @@ import CategoriesSection from '@/components/sections/CategoriesSection';
 
 export default function Home() {
   return (
-    <main>
-      <HeroSection />
-      <FeaturedProducts />
-      <CategoriesSection />
-    </main>
+    <>
+      <section aria-label="Hero banner">
+        <HeroSection />
+      </section>
+      <section aria-label="Featured products">
+        <FeaturedProducts />
+      </section>
+      <section aria-label="Product categories">
+        <CategoriesSection />
+      </section>
+    </>
   );
 }

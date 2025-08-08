@@ -73,40 +73,41 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} className="bg-gradient-to-br from-pink-50 to-rose-50 border-t">
+    <footer ref={footerRef} className="bg-gradient-to-br from-pink-50 to-rose-50 border-t" role="contentinfo">
       <div ref={contentRef} className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2">
+          <section className="space-y-4" aria-labelledby="brand-heading">
+            <Link href="/" className="flex items-center space-x-2" aria-label="Femme Steps - Go to homepage">
               <div className="h-8 w-8 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">FS</span>
+                <span className="text-white font-bold text-sm" aria-hidden="true">FS</span>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              <h2 id="brand-heading" className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                 Femme Steps
-              </span>
+              </h2>
             </Link>
             <p className="text-gray-600 text-sm leading-relaxed">
               Koleksi sepatu wanita terbaik dengan desain feminin dan kualitas premium.
               Temukan sepatu impian Anda di Femme Steps.
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors">
-                <Instagram className="h-5 w-5" />
+            <div className="flex space-x-4" role="list" aria-label="Social media links">
+              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Instagram">
+                <Instagram className="h-5 w-5" aria-hidden="true" />
               </Link>
-              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors">
-                <Facebook className="h-5 w-5" />
+              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Facebook">
+                <Facebook className="h-5 w-5" aria-hidden="true" />
               </Link>
-              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors">
-                <Twitter className="h-5 w-5" />
+              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Twitter">
+                <Twitter className="h-5 w-5" aria-hidden="true" />
               </Link>
             </div>
-          </div>
+          </section>
 
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Quick Links</h3>
-            <ul className="space-y-2">
+          <section className="space-y-4" aria-labelledby="quick-links-heading">
+            <h3 id="quick-links-heading" className="text-lg font-semibold text-gray-900">Quick Links</h3>
+            <nav role="navigation" aria-labelledby="quick-links-heading">
+              <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-gray-600 hover:text-pink-600 transition-colors text-sm">
                   Home
@@ -127,13 +128,15 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
-            </ul>
-          </div>
+              </ul>
+            </nav>
+          </section>
 
           {/* Categories */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Categories</h3>
-            <ul className="space-y-2">
+          <section className="space-y-4" aria-labelledby="categories-heading">
+            <h3 id="categories-heading" className="text-lg font-semibold text-gray-900">Categories</h3>
+            <nav role="navigation" aria-labelledby="categories-heading">
+              <ul className="space-y-2">
               <li>
                 <Link href="/catalog?category=high-heels" className="text-gray-600 hover:text-pink-600 transition-colors text-sm">
                   High Heels
@@ -154,33 +157,34 @@ const Footer = () => {
                   Boots
                 </Link>
               </li>
-            </ul>
-          </div>
+              </ul>
+            </nav>
+          </section>
 
           {/* Contact Info */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Contact Info</h3>
-            <div className="space-y-3">
+          <section className="space-y-4" aria-labelledby="contact-heading">
+            <h3 id="contact-heading" className="text-lg font-semibold text-gray-900">Contact Info</h3>
+            <address className="space-y-3 not-italic">
               <div className="flex items-center space-x-3">
-                <MapPin className="h-4 w-4 text-pink-500" />
+                <MapPin className="h-4 w-4 text-pink-500" aria-hidden="true" />
                 <span className="text-gray-600 text-sm">
                   Jl. Fashion Street No. 123, Jakarta
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-4 w-4 text-pink-500" />
-                <span className="text-gray-600 text-sm">
+                <Phone className="h-4 w-4 text-pink-500" aria-hidden="true" />
+                <a href="tel:+622112345678" className="text-gray-600 text-sm hover:text-pink-600 transition-colors">
                   +62 21 1234 5678
-                </span>
+                </a>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 text-pink-500" />
-                <span className="text-gray-600 text-sm">
+                <Mail className="h-4 w-4 text-pink-500" aria-hidden="true" />
+                <a href="mailto:hello@femmesteps.com" className="text-gray-600 text-sm hover:text-pink-600 transition-colors">
                   hello@femmesteps.com
-                </span>
+                </a>
               </div>
-            </div>
-          </div>
+            </address>
+          </section>
         </div>
 
         <Separator className="my-8" />
@@ -189,14 +193,16 @@ const Footer = () => {
           <p className="text-gray-600 text-sm">
             © 2024 Femme Steps. All rights reserved.
           </p>
-          <div className="flex space-x-6">
-            <Link href="/privacy" className="text-gray-600 hover:text-pink-600 transition-colors text-sm">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-gray-600 hover:text-pink-600 transition-colors text-sm">
-              Terms of Service
-            </Link>
-          </div>
+          <nav role="navigation" aria-label="Legal links">
+            <div className="flex space-x-6">
+              <Link href="/privacy" className="text-gray-600 hover:text-pink-600 transition-colors text-sm">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-gray-600 hover:text-pink-600 transition-colors text-sm">
+                Terms of Service
+              </Link>
+            </div>
+          </nav>
         </div>
       </div>
     </footer>

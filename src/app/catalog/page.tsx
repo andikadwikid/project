@@ -117,9 +117,9 @@ const CatalogPage = () => {
   const FilterContent = () => (
     <div className="space-y-6">
       {/* Categories */}
-      <div>
-        <h3 className="font-semibold text-gray-900 mb-3">Categories</h3>
-        <div className="space-y-2">
+      <fieldset>
+        <legend className="font-semibold text-gray-900 mb-3">Categories</legend>
+        <div className="space-y-2" role="radiogroup" aria-labelledby="categories-legend">
           <button
             onClick={() => setSelectedCategory('')}
             className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${!selectedCategory ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
@@ -140,16 +140,18 @@ const CatalogPage = () => {
                 onClick={() => setSelectedCategory(category.code)}
                 className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedCategory === category.code ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
                   }`}
+                role="radio"
+                aria-checked={selectedCategory === category.code}
               >
                 {category.name} ({category.productCount})
               </button>
             ))
           )}
         </div>
-      </div>
+      </fieldset>
 
       {/* Brands */}
-      <div>
+      <fieldset>
         <h3 className="font-semibold text-gray-900 mb-3">Brands</h3>
         <div className="space-y-2">
           <button
@@ -178,11 +180,11 @@ const CatalogPage = () => {
             ))
           )}
         </div>
-      </div>
+      </fieldset>
 
       {/* Price Range */}
-      <div>
-        <h3 className="font-semibold text-gray-900 mb-3">Price Range</h3>
+      <fieldset>
+        <legend className="font-semibold text-gray-900 mb-3">Price Range</legend>
         <div className="space-y-2">
           {[
             { value: '', label: 'All Prices' },
@@ -201,7 +203,7 @@ const CatalogPage = () => {
             </button>
           ))}
         </div>
-      </div>
+      </fieldset>
 
       {/* Clear Filters */}
       {activeFiltersCount > 0 && (
@@ -215,7 +217,7 @@ const CatalogPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b">
+      <header className="bg-white border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div ref={heroRef} className="text-center space-y-4">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -226,12 +228,12 @@ const CatalogPage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
-          <div className="hidden lg:block w-64 flex-shrink-0">
+          <aside className="hidden lg:block w-64 flex-shrink-0" aria-label="Product filters">
             <Card className="sticky top-24">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -243,21 +245,24 @@ const CatalogPage = () => {
                 <FilterContent />
               </CardContent>
             </Card>
-          </div>
+          </aside>
 
           {/* Main Content */}
-          <div className="flex-1">
+          <section className="flex-1" aria-label="Product catalog">
             {/* Search and Sort Bar */}
             <div ref={filtersRef} className="flex flex-col sm:flex-row gap-4 mb-6">
               {/* Search */}
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <label htmlFor="product-search" className="sr-only">Search products</label>
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" aria-hidden="true" />
                 <input
-                  type="text"
+                  id="product-search"
+                  type="search"
                   placeholder="Search shoes, brands, categories..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                  aria-label="Search for shoes, brands, or categories"
                 />
               </div>
 
@@ -283,17 +288,22 @@ const CatalogPage = () => {
               </Sheet>
 
               {/* Sort */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
-              >
-                <option value="name">Sort by Name</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest First</option>
-              </select>
+              <div>
+                <label htmlFor="sort-select" className="sr-only">Sort products by</label>
+                <select
+                  id="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-300"
+                  aria-label="Sort products by"
+                >
+                  <option value="name">Sort by Name</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="newest">Newest First</option>
+                </select>
+              </div>
             </div>
 
             {/* Active Filters */}
@@ -430,9 +440,9 @@ const CatalogPage = () => {
                 </Button>
               </div>
             )}
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

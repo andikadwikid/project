@@ -85,14 +85,14 @@ const Header = () => {
   }, []);
 
   return (
-    <header ref={headerRef} className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-gray-200 ${isScrolled ? 'bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60' : 'bg-white'}`}>
+    <header ref={headerRef} className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-gray-200 ${isScrolled ? 'bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60' : 'bg-white'}`} role="banner">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div ref={logoRef} className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2" aria-label="Femme Steps - Go to homepage">
               <div className="h-8 w-8 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">FS</span>
+                <span className="text-white font-bold text-sm" aria-hidden="true">FS</span>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                 Femme Steps
@@ -101,7 +101,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav ref={navRef} className="hidden md:flex items-center space-x-8">
+          <nav ref={navRef} className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (

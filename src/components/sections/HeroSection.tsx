@@ -74,28 +74,28 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section ref={heroRef} className="relative min-h-[80vh] flex items-center overflow-hidden">
+    <section ref={heroRef} className="relative min-h-[80vh] flex items-center overflow-hidden" aria-labelledby="hero-title">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50" aria-hidden="true" />
 
       {/* Decorative Elements */}
-      <div className="floating-element absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20" />
-      <div className="floating-element absolute bottom-32 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30" />
-      <div className="floating-element absolute top-1/2 right-10 w-12 h-12 bg-purple-200 rounded-full opacity-25" />
+      <div className="floating-element absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20" aria-hidden="true" />
+      <div className="floating-element absolute bottom-32 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30" aria-hidden="true" />
+      <div className="floating-element absolute top-1/2 right-10 w-12 h-12 bg-purple-200 rounded-full opacity-25" aria-hidden="true" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
-          <div className="space-y-8">
+          <header className="space-y-8">
             {/* Badge */}
-            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 border border-pink-200">
-              <Sparkles className="h-4 w-4 text-pink-500" />
+            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 border border-pink-200" role="banner">
+              <Sparkles className="h-4 w-4 text-pink-500" aria-hidden="true" />
               <span className="text-sm font-medium text-pink-700">New Collection 2024</span>
             </div>
 
             {/* Heading */}
             <div className="space-y-4">
-              <h1 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 id="hero-title" ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 bg-clip-text text-transparent">
                   Step Into
                 </span>
@@ -149,7 +149,7 @@ const HeroSection = () => {
                 <div className="text-sm text-gray-600">Rating</div>
               </div>
             </div>
-          </div>
+          </header>
 
           {/* Hero Image */}
           <div className="relative">
