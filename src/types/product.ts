@@ -1,14 +1,17 @@
 export interface ProductImage {
   id: number;
   productId: number;
+  productColorId?: number;
   colorId?: number;
   imageUrl: string;
   isPrimary: boolean;
   sortOrder: number;
-  color?: {
-    id: number;
-    colorName: string;
-    hexCode: string;
+  productColor?: {
+    color: {
+      id: number;
+      name: string;
+      hexCode: string;
+    };
   };
 }
 

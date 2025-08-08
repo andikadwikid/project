@@ -1,0 +1,15 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="20" fill="#F9FAFB"/>
+  <g transform="translate(20, 20)">
+    <!-- Formal shoe outline -->
+    <path d="M12 35 C12 35, 18 28, 28 28 C38 28, 48 30, 52 35 C56 38, 56 42, 52 45 C48 47, 38 48, 28 48 C18 48, 12 42, 12 35 Z" fill="#1F2937" stroke="#111827" stroke-width="2"/>
+    <!-- Shoe sole -->
+    <path d="M10 45 C10 45, 18 50, 28 50 C38 50, 48 50, 54 45 C54 47, 48 52, 28 52 C18 52, 10 47, 10 45 Z" fill="#374151"/>
+    <!-- Formal shoe details -->
+    <path d="M15 38 C20 36, 25 36, 30 36 C35 36, 40 36, 45 38" stroke="#6B7280" stroke-width="1" fill="none"/>
+    <path d="M18 42 C25 40, 35 40, 42 42" stroke="#6B7280" stroke-width="1" fill="none"/>
+    <!-- Heel -->
+    <rect x="45" y="42" width="8" height="6" fill="#111827" rx="1"/>
+  </g>
+  <text x="50" y="85" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Formal</text>
+</svg>

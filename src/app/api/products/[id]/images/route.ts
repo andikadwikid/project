@@ -21,11 +21,15 @@ export async function GET(
         productId: productId,
       },
       include: {
-        color: {
-          select: {
-            id: true,
-            colorName: true,
-            hexCode: true,
+        productColor: {
+          include: {
+            color: {
+              select: {
+                id: true,
+                name: true,
+                hexCode: true,
+              },
+            },
           },
         },
       },

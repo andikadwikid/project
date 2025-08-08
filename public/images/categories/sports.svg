@@ -1,0 +1,23 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="20" fill="#EFF6FF"/>
+  <g transform="translate(18, 20)">
+    <!-- Sports shoe outline -->
+    <path d="M8 38 C8 38, 12 30, 22 30 C32 30, 42 32, 48 35 C54 38, 56 42, 52 46 C48 48, 38 50, 28 50 C18 50, 8 45, 8 38 Z" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2"/>
+    <!-- Shoe sole with treads -->
+    <path d="M6 46 C6 46, 15 52, 28 52 C41 52, 50 52, 54 46 C54 48, 48 54, 28 54 C15 54, 6 48, 6 46 Z" fill="#1E40AF"/>
+    <!-- Sports shoe details -->
+    <path d="M12 35 C18 33, 25 33, 32 35" stroke="#DBEAFE" stroke-width="2" fill="none"/>
+    <path d="M15 40 C22 38, 30 38, 38 40" stroke="#DBEAFE" stroke-width="1.5" fill="none"/>
+    <!-- Nike-style swoosh -->
+    <path d="M45 38 C40 40, 35 42, 25 40" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+    <!-- Sole treads -->
+    <rect x="10" y="50" width="2" height="2" fill="#1E40AF"/>
+    <rect x="15" y="50" width="2" height="2" fill="#1E40AF"/>
+    <rect x="20" y="50" width="2" height="2" fill="#1E40AF"/>
+    <rect x="25" y="50" width="2" height="2" fill="#1E40AF"/>
+    <rect x="30" y="50" width="2" height="2" fill="#1E40AF"/>
+    <rect x="35" y="50" width="2" height="2" fill="#1E40AF"/>
+    <rect x="40" y="50" width="2" height="2" fill="#1E40AF"/>
+  </g>
+  <text x="50" y="85" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Sports</text>
+</svg>

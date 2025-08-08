@@ -60,15 +60,28 @@ export async function GET(request: NextRequest) {
         include: {
           category: true,
           brand: true,
-          colors: true,
+          colors: {
+            include: {
+              color: true,
+            },
+          },
           sizes: {
+            include: {
+              size: true,
+            },
             orderBy: {
-              sizeLabel: 'asc',
+              size: {
+                sizeLabel: 'asc',
+              },
             },
           },
           images: {
             include: {
-              color: true,
+              productColor: {
+                include: {
+                  color: true,
+                },
+              },
             },
             orderBy: [
               { isPrimary: 'desc' },
@@ -94,25 +107,25 @@ export async function GET(request: NextRequest) {
       category: product.category.name,
       price: Number(product.price),
       originalPrice: null, // You can add this field to schema if needed
-      image: product.images.find(img => img.isPrimary && !img.colorId)?.imageUrl || 
+      image: product.images.find(img => img.isPrimary && !img.productColorId)?.imageUrl || 
              product.images.find(img => img.isPrimary)?.imageUrl || 
              `/images/products/product-${product.id}.jpg`, // Fallback image path
       rating: 4.5, // You can add rating system later
       reviews: 128, // You can add review system later
       isNew: false, // You can add logic for new products
       isSale: false, // You can add sale logic
-      colors: product.colors.map((color) => ({
-        id: color.id,
-        code: color.code,
-        colorName: color.colorName,
-        hexCode: color.hexCode || '#000000',
-        imageUrl: color.imageUrl,
+      colors: product.colors.map((productColor) => ({
+        id: productColor.color.id,
+        code: productColor.color.code,
+        colorName: productColor.color.name,
+        hexCode: productColor.color.hexCode || '#000000',
+        imageUrl: productColor.imageUrl,
       })),
-      sizes: product.sizes.map((size) => ({
-        id: size.id,
-        code: size.code,
-        sizeLabel: size.sizeLabel,
-        cmValue: size.cmValue,
+      sizes: product.sizes.map((sizePivot) => ({
+        id: sizePivot.size.id,
+        code: sizePivot.size.code,
+        sizeLabel: sizePivot.size.sizeLabel,
+        cmValue: sizePivot.size.cmValue,
       })),
       images: product.images.map((img) => img.imageUrl),
     }))
@@ -145,47 +158,23 @@ export async function POST(request: NextRequest) {
     const {
       name,
       description,
-      categoryCode,
-      brandCode,
+      categoryId,
+      brandId,
       price,
-      colors = [],
-      sizes = [],
+      colorIds = [],
+      sizeIds = [],
+      images = [],
+      isActive = true
     } = body
 
     // Validate required fields
-    if (!name || !categoryCode || !brandCode || !price) {
+    if (!name || !categoryId || !brandId || !price) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: name, categoryCode, brandCode, price',
+          error: 'Missing required fields: name, categoryId, brandId, price',
         },
         { status: 400 }
-      )
-    }
-
-    // Find category and brand
-    const [category, brand] = await Promise.all([
-      prisma.category.findUnique({ where: { code: categoryCode } }),
-      prisma.brand.findUnique({ where: { code: brandCode } }),
-    ])
-
-    if (!category) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Category not found',
-        },
-        { status: 404 }
-      )
-    }
-
-    if (!brand) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Brand not found',
-        },
-        { status: 404 }
       )
     }
 
@@ -193,41 +182,80 @@ export async function POST(request: NextRequest) {
     const productCount = await prisma.product.count()
     const productCode = `PRD-${String(productCount + 1).padStart(3, '0')}`
 
-    // Create product with colors and sizes
+    // Create product
     const product = await prisma.product.create({
       data: {
         code: productCode,
         name,
         description,
-        categoryId: category.id,
-        brandId: brand.id,
-        price,
-        colors: {
-          create: colors.map((color: { name: string; value: string }, index: number) => ({
-            code: `CLR-${String(Date.now() + index).slice(-6)}`,
-            colorName: color.name,
-            hexCode: color.value,
-          })),
-        },
-        sizes: {
-          create: sizes.map((size: string, index: number) => ({
-            code: `SIZ-${String(Date.now() + index).slice(-6)}`,
-            sizeLabel: size,
-            cmValue: 22 + (parseInt(size) - 36) * 0.5, // Approximate conversion
-          })),
-        },
-      },
+        categoryId: parseInt(categoryId),
+        brandId: parseInt(brandId),
+        price: parseFloat(price),
+        isActive
+      }
+    })
+
+    // Associate colors with product
+    if (colorIds.length > 0) {
+      await Promise.all(
+        colorIds.map((colorId: number) =>
+          prisma.productColor.update({
+            where: { id: colorId },
+            data: { productId: product.id }
+          })
+        )
+      )
+    }
+
+    // Associate sizes with product
+    if (sizeIds.length > 0) {
+      await Promise.all(
+        sizeIds.map((sizeId: number) =>
+          prisma.productSizePivot.create({
+            data: {
+              productId: product.id,
+              sizeId: sizeId
+            }
+          })
+        )
+      )
+    }
+
+    // Create product images
+    if (images.length > 0) {
+      await Promise.all(
+        images.map((imageUrl: string, index: number) =>
+          prisma.productImage.create({
+            data: {
+              productId: product.id,
+              imageUrl,
+              isPrimary: index === 0,
+              sortOrder: index + 1
+            }
+          })
+        )
+      )
+    }
+
+    // Fetch the complete product with relations
+    const completeProduct = await prisma.product.findUnique({
+      where: { id: product.id },
       include: {
         category: true,
         brand: true,
         colors: true,
-        sizes: true,
-      },
+        sizes: {
+          include: {
+            size: true,
+          },
+        },
+        images: true
+      }
     })
 
     return NextResponse.json({
       success: true,
-      data: product,
+      data: completeProduct,
     })
   } catch (error) {
     console.error('Error creating product:', error)

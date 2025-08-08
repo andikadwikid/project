@@ -45,7 +45,8 @@ export function useProducts(params: UseProductsParams = {}) {
         if (params.page) searchParams.set('page', params.page.toString())
         if (params.limit) searchParams.set('limit', params.limit.toString())
 
-        const response = await fetch(`/api/products?${searchParams.toString()}`)
+        const url = `/api/products?${searchParams.toString()}`
+        const response = await fetch(url)
         
         if (!response.ok) {
           throw new Error('Failed to fetch products')
