@@ -85,7 +85,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   }, []);
 
   return (
-    <Card ref={cardRef} className="group overflow-hidden border-0 shadow-sm transition-all duration-300 bg-white h-full flex flex-col">
+    <Card className="group overflow-hidden border-0 shadow-sm transition-all duration-300 bg-white h-full flex flex-col">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Image Container */}
         <div ref={imageRef} className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50">
@@ -123,7 +123,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Quick Add Button - Hidden on mobile */}
           <Button
             size="sm"
-            className="hidden md:block absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+            className="flex absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
           >
             <ShoppingBag className="h-4 w-4 mr-2" />
             Add to Cart
@@ -185,16 +185,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   key={index}
                   className="w-4 h-4 rounded-full border border-gray-200"
                   style={{
-                    backgroundColor: color.toLowerCase().includes('pink') ? '#ec4899' :
-                      color.toLowerCase().includes('rose') ? '#f43f5e' :
-                        color.toLowerCase().includes('black') ? '#000000' :
-                          color.toLowerCase().includes('white') ? '#ffffff' :
-                            color.toLowerCase().includes('nude') ? '#d4a574' :
-                              color.toLowerCase().includes('burgundy') ? '#7c2d12' :
-                                color.toLowerCase().includes('lavender') ? '#a855f7' :
-                                  '#6b7280'
+                    backgroundColor: color.value || '#6b7280'
                   }}
-                  title={color}
+                  title={color.name || 'Unknown Color'}
                 />
               ))}
               {product.colors.length > 3 && (

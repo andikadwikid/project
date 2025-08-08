@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { categories } from '@/data/products';
+import { useCategories } from '@/hooks/useCategories';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,6 +12,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const CategoriesSection = () => {
+  const { categories, loading, error } = useCategories();
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
@@ -107,18 +108,40 @@ const CategoriesSection = () => {
 
         {/* Categories Grid */}
         <div ref={categoriesRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category) => (
-            <Link key={category.id} href={`/catalog?category=${category.slug}`}>
+          {loading ? (
+            // Loading skeleton
+            Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="bg-gray-200 aspect-square rounded-lg"></div>
+              </div>
+            ))
+          ) : error ? (
+            // Error state
+            <div className="col-span-full text-center py-12">
+              <p className="text-red-600 mb-4">Failed to load categories: {error}</p>
+            </div>
+          ) : categories.length === 0 ? (
+            // Empty state
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-600">No categories available.</p>
+            </div>
+          ) : (
+            categories.map((category) => (
+              <Link key={category.id} href={`/catalog?category=${category.code}`}>
               <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white h-full category-card">
                 <CardContent className="p-0">
                   {/* Image Container */}
                   <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-100 to-rose-100">
                     <Image
-                      src={category.image}
+                      src={`/images/categories/${category.code.toLowerCase().replace('cat-', '').replace('001', 'high-heels').replace('002', 'sneakers').replace('003', 'flats').replace('004', 'boots')}.svg`}
                       alt={category.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/hero-shoes.svg';
+                      }}
                     />
 
                     {/* Overlay */}
@@ -144,13 +167,14 @@ const CategoriesSection = () => {
                       {category.name}
                     </h3>
                     <p className="text-sm text-gray-600 line-clamp-2">
-                      {category.description}
+                      {category.productCount} products available
                     </p>
                   </div>
                 </CardContent>
               </Card>
             </Link>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Additional Info */}

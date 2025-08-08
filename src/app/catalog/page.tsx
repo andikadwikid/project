@@ -7,7 +7,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import ProductCard from '@/components/sections/ProductCard';
-import { products, categories, brands } from '@/data/products';
+import { useProducts } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
+import { useBrands } from '@/hooks/useBrands';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -20,43 +22,47 @@ const CatalogPage = () => {
   const [priceRange, setPriceRange] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('name');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [page, setPage] = useState(1);
   
   const heroRef = useRef<HTMLDivElement>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
   const productsRef = useRef<HTMLDivElement>(null);
 
-  // Filter and sort products
+  // Fetch data from API
+  const { products, loading: productsLoading, error: productsError, pagination } = useProducts({
+    category: selectedCategory || undefined,
+    brand: selectedBrand || undefined,
+    search: searchTerm || undefined,
+    page,
+    limit: 12,
+  });
+  
+  const { categories, loading: categoriesLoading } = useCategories();
+  const { brands, loading: brandsLoading } = useBrands();
+
+  // Apply client-side price filtering and sorting since API doesn't handle these yet
   const filteredProducts = useMemo(() => {
-    const filtered = products.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    let filtered = [...products];
 
-      const matchesCategory = !selectedCategory || product.category === selectedCategory;
-      const matchesBrand = !selectedBrand || product.brand === selectedBrand;
-
-      let matchesPrice = true;
-      if (priceRange) {
+    // Apply price range filter
+    if (priceRange) {
+      filtered = filtered.filter(product => {
         switch (priceRange) {
           case 'under-500k':
-            matchesPrice = product.price < 500000;
-            break;
+            return product.price < 500000;
           case '500k-1m':
-            matchesPrice = product.price >= 500000 && product.price < 1000000;
-            break;
+            return product.price >= 500000 && product.price < 1000000;
           case '1m-1.5m':
-            matchesPrice = product.price >= 1000000 && product.price < 1500000;
-            break;
+            return product.price >= 1000000 && product.price < 1500000;
           case 'over-1.5m':
-            matchesPrice = product.price >= 1500000;
-            break;
+            return product.price >= 1500000;
+          default:
+            return true;
         }
-      }
+      });
+    }
 
-      return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
-    });
-
-    // Sort products
+    // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
@@ -73,7 +79,7 @@ const CatalogPage = () => {
     });
 
     return filtered;
-  }, [searchTerm, selectedCategory, selectedBrand, priceRange, sortBy]);
+  }, [products, priceRange, sortBy]);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -103,6 +109,7 @@ const CatalogPage = () => {
     setSelectedBrand('');
     setPriceRange('');
     setSortBy('name');
+    setPage(1);
   };
 
   const activeFiltersCount = [selectedCategory, selectedBrand, priceRange].filter(Boolean).length;
@@ -120,16 +127,24 @@ const CatalogPage = () => {
           >
             All Categories
           </button>
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.name)}
-              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedCategory === category.name ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-                }`}
-            >
-              {category.name}
-            </button>
-          ))}
+          {categoriesLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="h-8 bg-gray-200 rounded-md"></div>
+              </div>
+            ))
+          ) : (
+            categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.code)}
+                className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedCategory === category.code ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+                  }`}
+              >
+                {category.name} ({category.productCount})
+              </button>
+            ))
+          )}
         </div>
       </div>
 
@@ -144,16 +159,24 @@ const CatalogPage = () => {
           >
             All Brands
           </button>
-          {brands.map((brand) => (
-            <button
-              key={brand.id}
-              onClick={() => setSelectedBrand(brand.name)}
-              className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedBrand === brand.name ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
-                }`}
-            >
-              {brand.name}
-            </button>
-          ))}
+          {brandsLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="h-8 bg-gray-200 rounded-md"></div>
+              </div>
+            ))
+          ) : (
+            brands.map((brand) => (
+              <button
+                key={brand.id}
+                onClick={() => setSelectedBrand(brand.code)}
+                className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedBrand === brand.code ? 'bg-pink-100 text-pink-700' : 'hover:bg-gray-100'
+                  }`}
+              >
+                {brand.name} ({brand.productCount})
+              </button>
+            ))
+          )}
         </div>
       </div>
 
@@ -278,7 +301,7 @@ const CatalogPage = () => {
               <div className="flex flex-wrap gap-2 mb-6">
                 {selectedCategory && (
                   <Badge variant="secondary" className="flex items-center gap-1">
-                    {selectedCategory}
+                    {categories.find(cat => cat.code === selectedCategory)?.name || selectedCategory}
                     <button onClick={() => setSelectedCategory('')} className="ml-1 hover:text-red-600">
                       ×
                     </button>
@@ -286,7 +309,7 @@ const CatalogPage = () => {
                 )}
                 {selectedBrand && (
                   <Badge variant="secondary" className="flex items-center gap-1">
-                    {selectedBrand}
+                    {brands.find(brand => brand.code === selectedBrand)?.name || selectedBrand}
                     <button onClick={() => setSelectedBrand('')} className="ml-1 hover:text-red-600">
                       ×
                     </button>
@@ -304,14 +327,41 @@ const CatalogPage = () => {
             )}
 
             {/* Results Count */}
-            <div className="mb-6">
-              <p className="text-gray-600">
-                Showing {filteredProducts.length} of {products.length} products
-              </p>
-            </div>
+            {!productsLoading && (
+              <div className="mb-6">
+                <p className="text-gray-600">
+                  Showing {filteredProducts.length} of {pagination.total} products
+                  {pagination.totalPages > 1 && ` (Page ${pagination.page} of ${pagination.totalPages})`}
+                </p>
+              </div>
+            )}
 
-            {/* Products Grid */}
-            {filteredProducts.length > 0 ? (
+            {/* Loading State */}
+            {productsLoading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="animate-pulse">
+                    <div className="bg-gray-200 aspect-square rounded-lg mb-4"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : productsError ? (
+              <div className="text-center py-12">
+                <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="h-8 w-8 text-red-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Error loading products</h3>
+                <p className="text-gray-600 mb-4">{productsError}</p>
+                <Button onClick={() => window.location.reload()} variant="outline">
+                  Try again
+                </Button>
+              </div>
+            ) : filteredProducts.length > 0 ? (
               <div ref={productsRef} className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6">
                 {filteredProducts.map((product) => (
                   <div key={product.id} className="product-card-wrapper">
@@ -328,6 +378,55 @@ const CatalogPage = () => {
                 <p className="text-gray-600 mb-4">Try adjusting your search or filter criteria</p>
                 <Button onClick={clearFilters} variant="outline">
                   Clear all filters
+                </Button>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {!productsLoading && !productsError && pagination.totalPages > 1 && (
+              <div className="mt-8 flex justify-center items-center space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setPage(page - 1)}
+                  disabled={page <= 1}
+                  className="px-3 py-2"
+                >
+                  Previous
+                </Button>
+                
+                <div className="flex space-x-1">
+                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (pagination.totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (page <= 3) {
+                      pageNum = i + 1;
+                    } else if (page >= pagination.totalPages - 2) {
+                      pageNum = pagination.totalPages - 4 + i;
+                    } else {
+                      pageNum = page - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={page === pageNum ? "default" : "outline"}
+                        onClick={() => setPage(pageNum)}
+                        className="px-3 py-2 min-w-[40px]"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  onClick={() => setPage(page + 1)}
+                  disabled={page >= pagination.totalPages}
+                  className="px-3 py-2"
+                >
+                  Next
                 </Button>
               </div>
             )}
