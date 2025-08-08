@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag, Trash2, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +20,35 @@ const CartDrawer = () => {
     } else {
       updateQuantity(itemId, newQuantity);
     }
+  };
+
+  const generateWhatsAppMessage = () => {
+    let message = "Halo! Saya ingin memesan produk berikut:\n\n";
+    
+    items.forEach((item, index) => {
+      message += `${index + 1}. ${item.product.name}\n`;
+      message += `   Brand: ${item.product.brand?.name || 'N/A'}\n`;
+      if (item.selectedColor && item.selectedColor.colorName) {
+        message += `   Warna: ${item.selectedColor.colorName}\n`;
+      }
+      if (item.selectedSize && item.selectedSize.sizeLabel) {
+        message += `   Ukuran: ${item.selectedSize.sizeLabel}\n`;
+      }
+      message += `   Kuantitas: ${item.quantity}\n`;
+      message += `   Harga: ${formatPrice(item.product.price * item.quantity)}\n\n`;
+    });
+    
+    message += `Total Pesanan: ${formatPrice(total)}\n\n`;
+    message += "Mohon konfirmasi ketersediaan dan proses pembayaran. Terima kasih!";
+    
+    return encodeURIComponent(message);
+  };
+
+  const handleWhatsAppCheckout = () => {
+    const message = generateWhatsAppMessage();
+    const phoneNumber = "6281234567890"; // Ganti dengan nomor WhatsApp toko
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -166,8 +195,13 @@ const CartDrawer = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Button className="w-full bg-pink-600 hover:bg-pink-700" size="lg">
-                    Checkout ({itemCount} items)
+                  <Button 
+                    className="w-full bg-green-600 hover:bg-green-700" 
+                    size="lg"
+                    onClick={handleWhatsAppCheckout}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Checkout via WhatsApp ({itemCount} items)
                   </Button>
                   
                   <Button 
