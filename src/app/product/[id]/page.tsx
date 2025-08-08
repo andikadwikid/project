@@ -4,11 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Heart, Share2, ShoppingBag, Plus, Minus, Star, Truck, Shield, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, ShoppingBag, Plus, Minus, Star, Truck, Shield, RotateCcw, Ruler } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useProduct } from '@/hooks/useProduct';
@@ -27,6 +28,7 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   
   const heroRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -271,9 +273,118 @@ const ProductDetailPage = () => {
             {/* Size Selection */}
             {product.sizes && product.sizes.length > 0 && (
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-3">
-                  Size: {selectedSize?.sizeLabel}
-                </h3>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-medium text-gray-900">
+                    Size: {selectedSize?.sizeLabel}
+                  </h3>
+                  <Dialog open={isSizeGuideOpen} onOpenChange={setIsSizeGuideOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="ghost" size="sm" className="text-pink-600 hover:text-pink-700">
+                        <Ruler className="h-4 w-4 mr-1" />
+                        Size Guide
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Size Guide</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-6">
+                        {/* Size Chart Table */}
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse border border-gray-300">
+                            <thead>
+                              <tr className="bg-gray-50">
+                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Size</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Chest (cm)</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Waist (cm)</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Hip (cm)</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Length (cm)</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td className="border border-gray-300 px-4 py-2 font-medium">XS</td>
+                                <td className="border border-gray-300 px-4 py-2">80-84</td>
+                                <td className="border border-gray-300 px-4 py-2">60-64</td>
+                                <td className="border border-gray-300 px-4 py-2">86-90</td>
+                                <td className="border border-gray-300 px-4 py-2">58</td>
+                              </tr>
+                              <tr className="bg-gray-50">
+                                <td className="border border-gray-300 px-4 py-2 font-medium">S</td>
+                                <td className="border border-gray-300 px-4 py-2">84-88</td>
+                                <td className="border border-gray-300 px-4 py-2">64-68</td>
+                                <td className="border border-gray-300 px-4 py-2">90-94</td>
+                                <td className="border border-gray-300 px-4 py-2">60</td>
+                              </tr>
+                              <tr>
+                                <td className="border border-gray-300 px-4 py-2 font-medium">M</td>
+                                <td className="border border-gray-300 px-4 py-2">88-92</td>
+                                <td className="border border-gray-300 px-4 py-2">68-72</td>
+                                <td className="border border-gray-300 px-4 py-2">94-98</td>
+                                <td className="border border-gray-300 px-4 py-2">62</td>
+                              </tr>
+                              <tr className="bg-gray-50">
+                                <td className="border border-gray-300 px-4 py-2 font-medium">L</td>
+                                <td className="border border-gray-300 px-4 py-2">92-96</td>
+                                <td className="border border-gray-300 px-4 py-2">72-76</td>
+                                <td className="border border-gray-300 px-4 py-2">98-102</td>
+                                <td className="border border-gray-300 px-4 py-2">64</td>
+                              </tr>
+                              <tr>
+                                <td className="border border-gray-300 px-4 py-2 font-medium">XL</td>
+                                <td className="border border-gray-300 px-4 py-2">96-100</td>
+                                <td className="border border-gray-300 px-4 py-2">76-80</td>
+                                <td className="border border-gray-300 px-4 py-2">102-106</td>
+                                <td className="border border-gray-300 px-4 py-2">66</td>
+                              </tr>
+                              <tr className="bg-gray-50">
+                                <td className="border border-gray-300 px-4 py-2 font-medium">XXL</td>
+                                <td className="border border-gray-300 px-4 py-2">100-104</td>
+                                <td className="border border-gray-300 px-4 py-2">80-84</td>
+                                <td className="border border-gray-300 px-4 py-2">106-110</td>
+                                <td className="border border-gray-300 px-4 py-2">68</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        {/* Measurement Guide */}
+                        <div className="space-y-4">
+                          <h4 className="font-medium text-gray-900">How to Measure</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium mb-1">Chest:</p>
+                              <p>Measure around the fullest part of your chest, keeping the tape horizontal.</p>
+                            </div>
+                            <div>
+                              <p className="font-medium mb-1">Waist:</p>
+                              <p>Measure around your natural waistline, keeping the tape comfortably loose.</p>
+                            </div>
+                            <div>
+                              <p className="font-medium mb-1">Hip:</p>
+                              <p>Measure around the fullest part of your hips, keeping the tape horizontal.</p>
+                            </div>
+                            <div>
+                              <p className="font-medium mb-1">Length:</p>
+                              <p>Measure from the highest point of your shoulder to the desired length.</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Tips */}
+                        <div className="bg-pink-50 p-4 rounded-lg">
+                          <h4 className="font-medium text-pink-900 mb-2">Sizing Tips</h4>
+                          <ul className="text-sm text-pink-800 space-y-1">
+                            <li>• For the best fit, have someone help you measure</li>
+                            <li>• Wear fitted clothing or undergarments when measuring</li>
+                            <li>• If you&apos;re between sizes, we recommend sizing up</li>
+                            <li>• Check the fabric composition for stretch information</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
                 <div className="grid grid-cols-4 gap-2">
                   {product.sizes.map((size) => (
                     <button
