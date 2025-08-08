@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dialog'
 import { Plus, Edit, Trash2, Search, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Product } from '@/types/product'
 
 interface ProductsResponse {
@@ -94,7 +95,7 @@ const AdminProducts = () => {
 
     useEffect(() => {
         fetchProducts(currentPage, searchTerm)
-    }, [currentPage])
+    }, [currentPage, searchTerm])
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -168,9 +169,11 @@ const AdminProducts = () => {
                                         {products.map((product) => (
                                             <TableRow key={product.id}>
                                                 <TableCell>
-                                                    <img
+                                                    <Image
                                                         src={product.image}
                                                         alt={product.name}
+                                                        width={48}
+                                                        height={48}
                                                         className="w-12 h-12 object-cover rounded"
                                                         onError={(e) => {
                                                             const target = e.target as HTMLImageElement
@@ -180,10 +183,10 @@ const AdminProducts = () => {
                                                 </TableCell>
                                                 <TableCell className="font-medium">{product.name}</TableCell>
                                                 <TableCell>
-                                                    <Badge variant="secondary">{product.category}</Badge>
+                                                    <Badge variant="secondary">{product.category.name}</Badge>
                                                 </TableCell>
-                                                <TableCell>{product.brand}</TableCell>
-                                                <TableCell>${product.price}</TableCell>
+                                                <TableCell>{product.brand.name}</TableCell>
+                                                <TableCell>Rp {product.price.toLocaleString('id-ID')}</TableCell>
                                                 <TableCell>
                                                     <div className="flex space-x-1">
                                                         {product.colors?.slice(0, 3).map((color, index) => (

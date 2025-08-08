@@ -103,8 +103,8 @@ export async function GET(request: NextRequest) {
       id: product.id,
       name: product.name,
       description: product.description,
-      brand: product.brand.name,
-      category: product.category.name,
+      brand: product.brand,
+      category: product.category,
       price: Number(product.price),
       originalPrice: null, // You can add this field to schema if needed
       image: product.images.find(img => img.isPrimary && !img.productColorId)?.imageUrl || 

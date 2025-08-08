@@ -3,17 +3,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowLeft, Heart, Share2, ShoppingBag, Plus, Minus, Star, Truck, Shield, RotateCcw, Ruler } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useProduct } from '@/hooks/useProduct';
-import { ProductColor, ProductSize, ProductImage } from '@/types/product';
+import { ProductColor, ProductSize } from '@/types/product';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +19,7 @@ const ProductDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const productId = params.id as string;
-  
+
   const { product, loading, error } = useProduct(productId);
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
@@ -29,7 +27,7 @@ const ProductDetailPage = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
-  
+
   const heroRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
@@ -54,7 +52,7 @@ const ProductDetailPage = () => {
 
       if (hero && image && details) {
         gsap.set([image, details], { opacity: 0, y: 30 });
-        
+
         const tl = gsap.timeline();
         tl.to(image, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" })
           .to(details, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.4");
@@ -82,9 +80,9 @@ const ProductDetailPage = () => {
 
   const getFilteredImages = () => {
     if (!product?.images) return [];
-    
+
     if (!selectedColor) return product.images;
-    
+
     const colorImages = product.images.filter(img => img.colorId === selectedColor.id);
     return colorImages.length > 0 ? colorImages : product.images;
   };
@@ -137,8 +135,8 @@ const ProductDetailPage = () => {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={() => router.back()}
               className="flex items-center gap-2"
             >
@@ -146,8 +144,8 @@ const ProductDetailPage = () => {
               Back
             </Button>
             <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => setIsWishlisted(!isWishlisted)}
               >
@@ -167,16 +165,17 @@ const ProductDetailPage = () => {
           <div ref={imageRef} className="space-y-4">
             {/* Main Image */}
             <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm">
-              <img
+              <Image
                 src={currentImage.imageUrl}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
                 onError={(e) => {
                   e.currentTarget.src = '/images/hero-shoes.svg';
                 }}
               />
             </div>
-            
+
             {/* Thumbnail Images */}
             {filteredImages.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
@@ -184,13 +183,14 @@ const ProductDetailPage = () => {
                   <button
                     key={image.id}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`aspect-square bg-white rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImageIndex === index ? 'border-pink-500' : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`aspect-square bg-white rounded-lg overflow-hidden border-2 transition-colors ${selectedImageIndex === index ? 'border-pink-500' : 'border-gray-200 hover:border-gray-300'
+                      }`}
                   >
-                    <img
+                    <Image
                       src={image.imageUrl}
                       alt={`${product.name} ${index + 1}`}
+                      width={100}
+                      height={100}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.currentTarget.src = '/images/hero-shoes.svg';
@@ -212,18 +212,17 @@ const ProductDetailPage = () => {
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
               <p className="text-lg text-gray-600 mb-4">{product.brand.name}</p>
-              
+
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.floor(product.rating || 0)
+                      className={`h-4 w-4 ${i < Math.floor(product.rating || 0)
                           ? 'text-yellow-400 fill-yellow-400'
                           : 'text-gray-300'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -257,11 +256,10 @@ const ProductDetailPage = () => {
                         setSelectedColor(color);
                         setSelectedImageIndex(0);
                       }}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${
-                        selectedColor?.code === color.code
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor?.code === color.code
                           ? 'border-gray-900 scale-110'
                           : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                        }`}
                       style={{ backgroundColor: color.hexCode }}
                       title={color.colorName}
                     />
@@ -300,25 +298,25 @@ const ProductDetailPage = () => {
                             </thead>
                             <tbody>
                               {product.sizes?.map((size, index) => (
-                                 <tr key={size.id} className={index % 2 === 0 ? '' : 'bg-gray-50'}>
-                                   <td className="border border-gray-300 px-4 py-2 font-medium">
-                                     {size.sizeLabel}
-                                   </td>
-                                   <td className="border border-gray-300 px-4 py-2">
-                                     {size.cmValue ? `${size.cmValue} cm` : 'Contact us for measurements'}
-                                   </td>
-                                 </tr>
-                               ))}
+                                <tr key={size.id} className={index % 2 === 0 ? '' : 'bg-gray-50'}>
+                                  <td className="border border-gray-300 px-4 py-2 font-medium">
+                                    {size.sizeLabel}
+                                  </td>
+                                  <td className="border border-gray-300 px-4 py-2">
+                                    {size.cmValue ? `${size.cmValue} cm` : 'Contact us for measurements'}
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
                           </table>
-                          
+
                           {product.sizes && product.sizes.length === 0 && (
                             <div className="text-center py-8 text-gray-500">
                               No size information available for this product.
                             </div>
                           )}
                         </div>
-                        
+
                         {/* Measurement Guide */}
                         <div className="space-y-4">
                           <h4 className="font-medium text-gray-900">How to Measure</h4>
@@ -341,7 +339,7 @@ const ProductDetailPage = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Tips */}
                         <div className="bg-pink-50 p-4 rounded-lg">
                           <h4 className="font-medium text-pink-900 mb-2">Sizing Tips</h4>
@@ -361,11 +359,10 @@ const ProductDetailPage = () => {
                     <button
                       key={size.id}
                       onClick={() => setSelectedSize(size)}
-                      className={`py-2 px-3 text-sm border rounded-md transition-colors ${
-                        selectedSize?.code === size.code
+                      className={`py-2 px-3 text-sm border rounded-md transition-colors ${selectedSize?.code === size.code
                           ? 'border-pink-500 bg-pink-50 text-pink-700'
                           : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                        }`}
                     >
                       {size.sizeLabel}
                     </button>
@@ -399,7 +396,7 @@ const ProductDetailPage = () => {
 
             {/* Add to Cart */}
             <div className="space-y-3">
-              <Button 
+              <Button
                 onClick={handleAddToCart}
                 className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3"
                 size="lg"

@@ -143,7 +143,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <div className="space-y-1 md:space-y-3 flex-1">
             {/* Brand - Hidden on mobile */}
             <p className="hidden md:block text-xs font-medium text-pink-600 uppercase tracking-wide">
-              {product.brand}
+              {product.brand.name}
             </p>
 
             {/* Product Name */}
