@@ -4,6 +4,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/contexts/CartContext';
 import CartDrawerWrapper from '@/components/cart/CartDrawerWrapper';
+import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -51,6 +52,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <CartDrawerWrapper />
+          <WhatsAppButton phoneNumber="6281234567890" message="Halo, saya tertarik dengan produk sepatu di Femme Steps" />
           <Toaster position="top-right" richColors />
         </CartProvider>
       </body>
