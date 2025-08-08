@@ -88,12 +88,12 @@ export default function CartDrawer({ isOpen, closeCart }: CartDrawerProps) {
           ) : (
             <>
               {/* Cart Items */}
-              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
+              <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-2 sm:space-y-3 max-h-[60vh] sm:max-h-[65vh]">
                 {state.items.map((item) => (
-                  <div key={`${item.id}-${item.selectedColor?.id || 'no-color'}-${item.selectedSize?.id || 'no-size'}`} className="bg-white border rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex gap-3 sm:gap-4">
+                  <div key={`${item.id}-${item.selectedColor?.id || 'no-color'}-${item.selectedSize?.id || 'no-size'}`} className="bg-white border rounded-lg p-2 sm:p-3 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex gap-2 sm:gap-3">
                       {/* Product Image */}
-                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
                         {(() => {
                           // Handle different image data structures
                           let imageUrl = '';
@@ -129,48 +129,48 @@ export default function CartDrawer({ isOpen, closeCart }: CartDrawerProps) {
 
                       {/* Product Details */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base">{item.product.name}</h3>
-                        <p className="text-xs sm:text-sm text-gray-600 mb-2">{item.product.brand.name}</p>
+                        <h3 className="font-semibold text-gray-900 truncate text-xs sm:text-sm">{item.product.name}</h3>
+                        <p className="text-xs text-gray-600 mb-1">{item.product.brand.name}</p>
 
                         {/* Selected Options */}
-                        <div className="flex flex-row space-y-1 mb-2 sm:mb-3">
+                        <div className="space-y-0.5 mb-1 sm:mb-2">
                           {item.selectedColor && (
-                            <div className="flex items-center gap-1.5 sm:gap-2">
+                            <div className="flex items-center gap-1">
                               <div
-                                className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-gray-300 flex-shrink-0"
+                                className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-gray-300 flex-shrink-0"
                                 style={{ backgroundColor: item.selectedColor.hexCode }}
                               />
-                              <span className="text-xs sm:text-sm text-gray-600 truncate">{item.selectedColor.colorName}</span>
+                              <span className="text-xs text-gray-600 truncate">{item.selectedColor.colorName}</span>
                             </div>
                           )}
                           {item.selectedSize && (
-                            <div className="text-xs sm:text-sm text-gray-600">
+                            <div className="text-xs text-gray-600">
                               Size: {item.selectedSize.sizeLabel}
                             </div>
                           )}
                         </div>
 
                         {/* Price and Quantity */}
-                        <div className="flex flex-col items-start justify-between gap-2">
-                          <div className="text-base sm:text-lg font-bold text-gray-900">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="text-sm sm:text-base font-bold text-gray-900">
                             {formatPrice(item.price)}
                           </div>
 
                           {/* Quantity Controls */}
-                          <div className="flex items-center gap-1 sm:gap-2">
+                          <div className="flex items-center gap-1">
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                              className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                               disabled={item.quantity <= 1}
                             >
-                              <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <Minus className="h-3 w-3" />
                             </button>
-                            <span className="w-6 sm:w-8 text-center font-medium text-sm sm:text-base">{item.quantity}</span>
+                            <span className="w-5 sm:w-6 text-center font-medium text-xs sm:text-sm">{item.quantity}</span>
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                              className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                             >
-                              <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <Plus className="h-3 w-3" />
                             </button>
                           </div>
                         </div>
@@ -178,7 +178,7 @@ export default function CartDrawer({ isOpen, closeCart }: CartDrawerProps) {
                         {/* Remove Button */}
                         <button
                           onClick={() => removeItem(item.id)}
-                          className="mt-2 text-red-600 hover:text-red-800 text-xs sm:text-sm font-medium transition-colors"
+                          className="mt-1 text-red-600 hover:text-red-800 text-xs font-medium transition-colors"
                         >
                           Remove
                         </button>
@@ -189,7 +189,7 @@ export default function CartDrawer({ isOpen, closeCart }: CartDrawerProps) {
               </div>
 
               {/* Cart Summary */}
-              <div className="border-t bg-gray-50 p-3 sm:p-4 space-y-3 sm:space-y-4">
+              <div className="border-t bg-gray-50 p-4 sm:p-6 space-y-4 sm:space-y-5">
                 <div className="flex justify-between items-center">
                   <span className="text-base sm:text-lg font-semibold">Total:</span>
                   <span className="text-xl sm:text-2xl font-bold text-blue-600">{formatPrice(state.total)}</span>
