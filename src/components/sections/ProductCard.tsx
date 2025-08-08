@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Product } from '@/types/product';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useState } from 'react';
+import ProductOptionsModal from '@/components/cart/ProductOptionsModal';
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +20,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsModalOpen(true);
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -125,18 +134,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Button
               size="sm"
               className="flex absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // Add to cart logic here
-                console.log('Add to cart:', product.id);
-              }}
+              onClick={handleAddToCart}
             >
               <ShoppingBag className="h-4 w-4 mr-2" />
               Add to Cart
             </Button>
           </div>
         </Link>
+
+        {/* Product Options Modal */}
+        <ProductOptionsModal
+          product={product}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
 
         {/* Product Info */}
         <div ref={contentRef} className="p-2 md:p-4 flex-1 flex flex-col">

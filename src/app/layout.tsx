@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { CartProvider } from '@/contexts/CartContext';
+import CartDrawer from '@/components/cart/CartDrawer';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: "Femme Steps - Premium Women's Shoes Collection",
@@ -41,11 +44,15 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body className="antialiased">
-        <Header />
-        <main id="main-content" role="main">
-          {children}
-        </main>
-        <Footer />
+        <CartProvider>
+          <Header />
+          <main id="main-content" role="main">
+            {children}
+          </main>
+          <Footer />
+          <CartDrawer />
+          <Toaster position="top-right" richColors />
+        </CartProvider>
       </body>
     </html>
   );

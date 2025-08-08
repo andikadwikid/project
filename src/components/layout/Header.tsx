@@ -3,10 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, ShoppingBag, Heart, User, Search } from 'lucide-react';
+import { Menu, Heart, User, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet';
 import { gsap } from 'gsap';
+import CartIcon from '@/components/cart/CartIcon';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -128,9 +129,7 @@ const Header = () => {
             <Button variant="ghost" size="icon" className="text-gray-700 hover:text-pink-600">
               <Heart className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-gray-700 hover:text-pink-600">
-              <ShoppingBag className="h-5 w-5" />
-            </Button>
+            <CartIcon />
             <Button variant="ghost" size="icon" className="text-gray-700 hover:text-pink-600">
               <User className="h-5 w-5" />
             </Button>
@@ -138,9 +137,7 @@ const Header = () => {
 
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="text-gray-700">
-              <ShoppingBag className="h-5 w-5" />
-            </Button>
+            <CartIcon />
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-gray-700">
