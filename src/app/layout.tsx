@@ -3,7 +3,7 @@ import "./globals.css";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/contexts/CartContext';
-import CartDrawer from '@/components/cart/CartDrawer';
+import CartDrawerWrapper from '@/components/cart/CartDrawerWrapper';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <CartDrawer />
+          <CartDrawerWrapper />
           <Toaster position="top-right" richColors />
         </CartProvider>
       </body>

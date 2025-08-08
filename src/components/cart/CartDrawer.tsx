@@ -1,184 +1,187 @@
 'use client';
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { X, Plus, Minus, ShoppingBag, Trash2, MessageCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
+import { ShoppingCart, Trash2, Plus, Minus, X } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/utils';
+import Link from 'next/link';
+import Image from 'next/image';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerClose,
+} from '@/components/ui/drawer';
 
-const CartDrawer = () => {
-  const { state, removeItem, updateQuantity, clearCart, closeCart } = useCart();
-  const { items, total, itemCount, isOpen } = state;
+interface CartDrawerProps {
+  isOpen: boolean;
+  closeCart: () => void;
+}
 
-  const handleQuantityChange = (itemId: string, newQuantity: number) => {
-    if (newQuantity < 1) {
-      removeItem(itemId);
-    } else {
-      updateQuantity(itemId, newQuantity);
-    }
-  };
+export default function CartDrawer({ isOpen, closeCart }: CartDrawerProps) {
+  const { state, updateQuantity, removeItem, clearCart } = useCart();
 
-  const generateWhatsAppMessage = () => {
-    let message = "Halo! Saya ingin memesan produk berikut:\n\n";
+  const handleWhatsAppCheckout = () => {
+    const phoneNumber = '6281234567890'; // Ganti dengan nomor WhatsApp toko
     
-    items.forEach((item, index) => {
+    let message = 'Halo, saya ingin memesan produk berikut:\n\n';
+    
+    state.items.forEach((item, index) => {
       message += `${index + 1}. ${item.product.name}\n`;
-      message += `   Brand: ${item.product.brand?.name || 'N/A'}\n`;
+      message += `   Brand: ${item.product.brand.name}\n`;
+      
       if (item.selectedColor && item.selectedColor.colorName) {
         message += `   Warna: ${item.selectedColor.colorName}\n`;
       }
+      
       if (item.selectedSize && item.selectedSize.sizeLabel) {
         message += `   Ukuran: ${item.selectedSize.sizeLabel}\n`;
       }
-      message += `   Kuantitas: ${item.quantity}\n`;
-      message += `   Harga: ${formatPrice(item.product.price * item.quantity)}\n\n`;
+      
+      message += `   Harga: ${formatPrice(item.price)}\n`;
+      message += `   Jumlah: ${item.quantity}\n`;
+      message += `   Subtotal: ${formatPrice(item.price * item.quantity)}\n\n`;
     });
     
-    message += `Total Pesanan: ${formatPrice(total)}\n\n`;
-    message += "Mohon konfirmasi ketersediaan dan proses pembayaran. Terima kasih!";
+    message += `Total: ${formatPrice(state.total)}`;
     
-    return encodeURIComponent(message);
-  };
-
-  const handleWhatsAppCheckout = () => {
-    const message = generateWhatsAppMessage();
-    const phoneNumber = "6281234567890"; // Ganti dengan nomor WhatsApp toko
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
     window.open(whatsappUrl, '_blank');
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={closeCart}>
-      <SheetContent className="w-full sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <ShoppingBag className="h-5 w-5" />
-              Shopping Cart
-              {itemCount > 0 && (
-                <Badge variant="secondary">{itemCount}</Badge>
-              )}
-            </span>
-            {items.length > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearCart}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              >
-                <Trash2 className="h-4 w-4 mr-1" />
-                Clear All
-              </Button>
-            )}
-          </SheetTitle>
-        </SheetHeader>
+    <Drawer open={isOpen} onOpenChange={(open) => !open && closeCart()} direction="right">
+      <DrawerContent className="h-full max-w-md">
+        <DrawerHeader className="border-b">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <ShoppingCart className="h-6 w-6" />
+              <DrawerTitle className="text-xl font-semibold">Shopping Cart</DrawerTitle>
+              <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                {state.itemCount}
+              </span>
+            </div>
+            <DrawerClose asChild>
+              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </DrawerClose>
+          </div>
+        </DrawerHeader>
 
         <div className="flex flex-col h-full">
-          {items.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <ShoppingBag className="h-8 w-8 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
-              <p className="text-gray-600 mb-6">Add some products to get started</p>
-              <Button onClick={closeCart} asChild>
-                <Link href="/catalog">
-                  Continue Shopping
-                </Link>
-              </Button>
+          {state.items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center flex-1 text-center p-8">
+              <ShoppingCart className="h-20 w-20 text-gray-300 mb-6" />
+              <h3 className="text-xl font-medium text-gray-900 mb-3">Your cart is empty</h3>
+              <p className="text-gray-500 mb-8">Add some products to get started!</p>
+              <Link 
+                href="/catalog"
+                onClick={closeCart}
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                Continue Shopping
+              </Link>
             </div>
           ) : (
             <>
               {/* Cart Items */}
-              <div className="flex-1 overflow-y-auto py-4 space-y-4">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
-                    {/* Product Image */}
-                    <div className="relative w-16 h-16 bg-white rounded-md overflow-hidden flex-shrink-0">
-                      <Image
-                        src={item.product.image}
-                        alt={item.product.name}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
-                    </div>
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {state.items.map((item) => (
+                  <div key={`${item.id}-${item.selectedColor?.id || 'no-color'}-${item.selectedSize?.id || 'no-size'}`} className="bg-white border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex gap-4">
+                      {/* Product Image */}
+                      <div className="relative w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        {(() => {
+                          // Handle different image data structures
+                          let imageUrl = '';
+                          
+                          // Check if images is an array of ProductImage objects
+                          if (item.product.images && Array.isArray(item.product.images) && item.product.images.length > 0) {
+                            if (typeof item.product.images[0] === 'object' && item.product.images[0].imageUrl) {
+                              imageUrl = item.product.images[0].imageUrl;
+                            } else if (typeof item.product.images[0] === 'string') {
+                              imageUrl = item.product.images[0];
+                            }
+                          }
+                          
+                          // Fallback to single image property
+                          if (!imageUrl && item.product.image) {
+                            imageUrl = item.product.image;
+                          }
+                          
+                          return imageUrl && imageUrl.trim() !== '' ? (
+                            <Image
+                              src={imageUrl}
+                              alt={item.product.name}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                              <ShoppingCart className="h-8 w-8 text-gray-400" />
+                            </div>
+                          );
+                        })()}
+                      </div>
 
-                    {/* Product Details */}
-                    <div className="flex-1 min-w-0">
-                      <Link href={`/product/${item.product.id}`} onClick={closeCart}>
-                        <h4 className="font-medium text-gray-900 hover:text-pink-600 transition-colors line-clamp-2 text-sm">
-                          {item.product.name}
-                        </h4>
-                      </Link>
-                      
-                      <div className="mt-1 space-y-1">
-                        <p className="text-xs text-gray-500">
-                          {item.product.brand.name}
-                        </p>
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">{item.product.name}</h3>
+                        <p className="text-sm text-gray-600 mb-2">{item.product.brand.name}</p>
                         
                         {/* Selected Options */}
-                        <div className="flex flex-wrap gap-2 text-xs">
+                        <div className="space-y-1 mb-3">
                           {item.selectedColor && (
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-2">
                               <div 
-                                className="w-3 h-3 rounded-full border border-gray-200"
-                                style={{ backgroundColor: item.selectedColor.hexCode }}
-                              />
-                              <span className="text-gray-600">{item.selectedColor.colorName}</span>
+                                 className="w-4 h-4 rounded-full border-2 border-gray-300"
+                                 style={{ backgroundColor: item.selectedColor.hexCode }}
+                               />
+                              <span className="text-sm text-gray-600">{item.selectedColor.colorName}</span>
                             </div>
                           )}
                           {item.selectedSize && (
-                            <Badge variant="outline" className="text-xs px-1 py-0">
-                              Size {item.selectedSize.sizeLabel}
-                            </Badge>
+                            <div className="text-sm text-gray-600">
+                               Size: {item.selectedSize.sizeLabel}
+                             </div>
                           )}
                         </div>
-                        
-                        {/* Price */}
-                        <p className="font-semibold text-gray-900">
-                          {formatPrice(item.price)}
-                        </p>
-                      </div>
-                    </div>
 
-                    {/* Quantity Controls & Remove */}
-                    <div className="flex flex-col items-end justify-between">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem(item.id)}
-                        className="text-gray-400 hover:text-red-600 p-1 h-auto"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                      
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        
-                        <span className="w-8 text-center text-sm font-medium">
-                          {item.quantity}
-                        </span>
-                        
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
+                        {/* Price and Quantity */}
+                        <div className="flex items-center justify-between">
+                          <div className="text-lg font-bold text-gray-900">
+                            {formatPrice(item.price)}
+                          </div>
+                          
+                          {/* Quantity Controls */}
+                          <div className="flex items-center gap-2">
+                            <button
+                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                               className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                               disabled={item.quantity <= 1}
+                             >
+                               <Minus className="h-4 w-4" />
+                             </button>
+                             <span className="w-8 text-center font-medium">{item.quantity}</span>
+                             <button
+                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                               className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                             >
+                               <Plus className="h-4 w-4" />
+                             </button>
+                          </div>
+                        </div>
+
+                        {/* Remove Button */}
+                        <button
+                           onClick={() => removeItem(item.id)}
+                           className="mt-2 text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
+                         >
+                           Remove
+                         </button>
                       </div>
                     </div>
                   </div>
@@ -186,42 +189,47 @@ const CartDrawer = () => {
               </div>
 
               {/* Cart Summary */}
-              <div className="border-t pt-4 space-y-4">
+              <div className="border-t bg-gray-50 p-4 space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-900">Total:</span>
-                  <span className="text-xl font-bold text-pink-600">
-                    {formatPrice(total)}
-                  </span>
+                  <span className="text-lg font-semibold">Total:</span>
+                  <span className="text-2xl font-bold text-blue-600">{formatPrice(state.total)}</span>
                 </div>
                 
-                <div className="space-y-2">
-                  <Button 
-                    className="w-full bg-green-600 hover:bg-green-700" 
-                    size="lg"
+                <div className="space-y-3">
+                  <button
                     onClick={handleWhatsAppCheckout}
+                    className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2"
                   >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Checkout via WhatsApp ({itemCount} items)
-                  </Button>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.382"/>
+                    </svg>
+                    Checkout via WhatsApp
+                  </button>
                   
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={closeCart}
-                    asChild
-                  >
-                    <Link href="/catalog">
-                      Continue Shopping
-                    </Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        clearCart();
+                        closeCart();
+                      }}
+                      className="flex-1 bg-red-50 text-red-600 py-2 px-4 rounded-lg hover:bg-red-100 transition-colors font-medium flex items-center justify-center gap-2"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Clear
+                    </button>
+                    <button
+                      onClick={closeCart}
+                      className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </div>
               </div>
             </>
           )}
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
-};
-
-export default CartDrawer;
+}
