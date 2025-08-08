@@ -18,6 +18,7 @@ import { ArrowLeft, Plus, X, Save } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { FileUpload } from '@/components/ui/file-upload'
 
 interface Category {
   id: number
@@ -65,7 +66,7 @@ const NewProduct = () => {
     isActive: true
   })
 
-  const [newImageUrl, setNewImageUrl] = useState('')
+  // Remove newImageUrl state as we'll use FileUpload component
 
   // Fetch categories, brands, colors, and sizes
   useEffect(() => {
@@ -132,20 +133,10 @@ const NewProduct = () => {
     }
   }
 
-  const addImage = () => {
-    if (newImageUrl.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        images: [...prev.images, newImageUrl.trim()]
-      }))
-      setNewImageUrl('')
-    }
-  }
-
-  const removeImage = (index: number) => {
+  const handleImageUpload = (urls: string[]) => {
     setFormData(prev => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
+      images: urls
     }))
   }
 
@@ -381,53 +372,13 @@ const NewProduct = () => {
             <CardHeader>
               <CardTitle>Product Images</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex space-x-2">
-                <Input
-                  placeholder="Enter image URL"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                />
-                <Button type="button" onClick={addImage}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Image
-                </Button>
-              </div>
-
-              {formData.images.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600">Current Images ({formData.images.length})</p>
-                  <div className="space-y-2">
-                    {formData.images.map((imageUrl, index) => (
-                      <div key={index} className="flex items-center space-x-3 p-3 border rounded-lg">
-                        <Image
-                          src={imageUrl || '/images/placeholder.svg'}
-                          alt={`Product image ${index + 1}`}
-                          width={48}
-                          height={48}
-                          className="w-12 h-12 object-cover rounded border"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.src = '/images/placeholder.svg'
-                          }}
-                        />
-                        <span className="flex-1 text-sm text-gray-600 truncate">{imageUrl}</span>
-                        {index === 0 && (
-                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Primary</span>
-                        )}
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeImage(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+            <CardContent>
+              <FileUpload
+                onUpload={handleImageUpload}
+                existingImages={formData.images}
+                maxFiles={10}
+                folder="products"
+              />
             </CardContent>
           </Card>
 

@@ -19,6 +19,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useParams } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
+import { FileUpload } from '@/components/ui/file-upload'
 
 interface Category {
   id: number
@@ -95,7 +96,7 @@ const EditProduct = () => {
     isActive: true
   })
 
-  const [newImageUrl, setNewImageUrl] = useState('')
+
 
   // Fetch product data and master data
   useEffect(() => {
@@ -223,14 +224,11 @@ const EditProduct = () => {
     }))
   }
 
-  const addImage = () => {
-    if (newImageUrl.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        images: [...prev.images, newImageUrl.trim()]
-      }))
-      setNewImageUrl('')
-    }
+  const handleImageUpload = (uploadedUrls: string[]) => {
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ...uploadedUrls]
+    }))
   }
 
   const removeImage = (index: number) => {
@@ -469,17 +467,13 @@ const EditProduct = () => {
               <CardTitle>Product Images</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex space-x-2">
-                <Input
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  placeholder="Enter image URL"
-                  className="flex-1"
-                />
-                <Button type="button" onClick={addImage} variant="outline">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
+              <FileUpload
+                onUpload={handleImageUpload}
+                maxFiles={10}
+                folder="products"
+                accept="image/*"
+                maxSize={5 * 1024 * 1024} // 5MB
+              />
               
               {formData.images.length > 0 && (
                 <div className="space-y-2">

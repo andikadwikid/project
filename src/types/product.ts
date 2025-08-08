@@ -51,8 +51,16 @@ export interface Product {
   originalPrice?: number;
   image: string;
   images?: ProductImage[];
-  category: string;
-  brand: string;
+  category: {
+    id: number;
+    name: string;
+    code: string;
+  };
+  brand: {
+    id: number;
+    name: string;
+    code: string;
+  };
   description: string;
   sizes?: ProductSize[];
   colors?: ProductColor[];

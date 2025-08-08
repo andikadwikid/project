@@ -205,11 +205,11 @@ const ProductDetailPage = () => {
             {/* Product Info */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant="secondary">{product.category}</Badge>
+                <Badge variant="secondary">{product.category.name}</Badge>
                 {product.isNew && <Badge className="bg-green-100 text-green-700">New</Badge>}
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-              <p className="text-lg text-gray-600 mb-4">{product.brand}</p>
+              <p className="text-lg text-gray-600 mb-4">{product.brand.name}</p>
               
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
