@@ -284,7 +284,7 @@ const ProductDetailPage = () => {
                         Size Guide
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-2xl">
+                    <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle>Size Guide</DialogTitle>
                       </DialogHeader>
@@ -295,57 +295,28 @@ const ProductDetailPage = () => {
                             <thead>
                               <tr className="bg-gray-50">
                                 <th className="border border-gray-300 px-4 py-2 text-left font-medium">Size</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Chest (cm)</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Waist (cm)</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Hip (cm)</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Length (cm)</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left font-medium">Measurement (cm)</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td className="border border-gray-300 px-4 py-2 font-medium">XS</td>
-                                <td className="border border-gray-300 px-4 py-2">80-84</td>
-                                <td className="border border-gray-300 px-4 py-2">60-64</td>
-                                <td className="border border-gray-300 px-4 py-2">86-90</td>
-                                <td className="border border-gray-300 px-4 py-2">58</td>
-                              </tr>
-                              <tr className="bg-gray-50">
-                                <td className="border border-gray-300 px-4 py-2 font-medium">S</td>
-                                <td className="border border-gray-300 px-4 py-2">84-88</td>
-                                <td className="border border-gray-300 px-4 py-2">64-68</td>
-                                <td className="border border-gray-300 px-4 py-2">90-94</td>
-                                <td className="border border-gray-300 px-4 py-2">60</td>
-                              </tr>
-                              <tr>
-                                <td className="border border-gray-300 px-4 py-2 font-medium">M</td>
-                                <td className="border border-gray-300 px-4 py-2">88-92</td>
-                                <td className="border border-gray-300 px-4 py-2">68-72</td>
-                                <td className="border border-gray-300 px-4 py-2">94-98</td>
-                                <td className="border border-gray-300 px-4 py-2">62</td>
-                              </tr>
-                              <tr className="bg-gray-50">
-                                <td className="border border-gray-300 px-4 py-2 font-medium">L</td>
-                                <td className="border border-gray-300 px-4 py-2">92-96</td>
-                                <td className="border border-gray-300 px-4 py-2">72-76</td>
-                                <td className="border border-gray-300 px-4 py-2">98-102</td>
-                                <td className="border border-gray-300 px-4 py-2">64</td>
-                              </tr>
-                              <tr>
-                                <td className="border border-gray-300 px-4 py-2 font-medium">XL</td>
-                                <td className="border border-gray-300 px-4 py-2">96-100</td>
-                                <td className="border border-gray-300 px-4 py-2">76-80</td>
-                                <td className="border border-gray-300 px-4 py-2">102-106</td>
-                                <td className="border border-gray-300 px-4 py-2">66</td>
-                              </tr>
-                              <tr className="bg-gray-50">
-                                <td className="border border-gray-300 px-4 py-2 font-medium">XXL</td>
-                                <td className="border border-gray-300 px-4 py-2">100-104</td>
-                                <td className="border border-gray-300 px-4 py-2">80-84</td>
-                                <td className="border border-gray-300 px-4 py-2">106-110</td>
-                                <td className="border border-gray-300 px-4 py-2">68</td>
-                              </tr>
+                              {product.sizes?.map((size, index) => (
+                                 <tr key={size.id} className={index % 2 === 0 ? '' : 'bg-gray-50'}>
+                                   <td className="border border-gray-300 px-4 py-2 font-medium">
+                                     {size.sizeLabel}
+                                   </td>
+                                   <td className="border border-gray-300 px-4 py-2">
+                                     {size.cmValue ? `${size.cmValue} cm` : 'Contact us for measurements'}
+                                   </td>
+                                 </tr>
+                               ))}
                             </tbody>
                           </table>
+                          
+                          {product.sizes && product.sizes.length === 0 && (
+                            <div className="text-center py-8 text-gray-500">
+                              No size information available for this product.
+                            </div>
+                          )}
                         </div>
                         
                         {/* Measurement Guide */}
