@@ -88,14 +88,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
     <Card className="group overflow-hidden border-0 shadow-sm transition-all duration-300 bg-white h-full flex flex-col">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Image Container */}
-        <div ref={imageRef} className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+        <Link href={`/product/${product.id}`}>
+          <div ref={imageRef} className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50 cursor-pointer">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
 
           {/* Badges */}
           <div className="absolute top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 md:gap-2">
@@ -120,15 +121,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Heart className="h-4 w-4" />
           </Button>
 
-          {/* Quick Add Button - Hidden on mobile */}
-          <Button
-            size="sm"
-            className="flex absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
-          >
-            <ShoppingBag className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
-        </div>
+            {/* Quick Add Button - Hidden on mobile */}
+            <Button
+              size="sm"
+              className="flex absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Add to cart logic here
+                console.log('Add to cart:', product.id);
+              }}
+            >
+              <ShoppingBag className="h-4 w-4 mr-2" />
+              Add to Cart
+            </Button>
+          </div>
+        </Link>
 
         {/* Product Info */}
         <div ref={contentRef} className="p-2 md:p-4 flex-1 flex flex-col">
@@ -177,24 +185,26 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
 
           {/* Available Colors - Hidden on mobile */}
-          <div className="hidden md:flex items-center space-x-2">
-            <span className="text-xs text-gray-500">Colors:</span>
-            <div className="flex space-x-1">
-              {product.colors.slice(0, 3).map((color, index) => (
-                <div
-                  key={index}
-                  className="w-4 h-4 rounded-full border border-gray-200"
-                  style={{
-                    backgroundColor: color.value || '#6b7280'
-                  }}
-                  title={color.name || 'Unknown Color'}
-                />
-              ))}
-              {product.colors.length > 3 && (
-                <span className="text-xs text-gray-400">+{product.colors.length - 3}</span>
-              )}
+          {product.colors && product.colors.length > 0 && (
+            <div className="hidden md:flex items-center space-x-2">
+              <span className="text-xs text-gray-500">Colors:</span>
+              <div className="flex space-x-1">
+                {product.colors.slice(0, 3).map((color, index) => (
+                  <div
+                    key={color.id || index}
+                    className="w-4 h-4 rounded-full border border-gray-200"
+                    style={{
+                      backgroundColor: color.hexCode || '#6b7280'
+                    }}
+                    title={color.colorName || 'Unknown Color'}
+                  />
+                ))}
+                {product.colors.length > 3 && (
+                  <span className="text-xs text-gray-400">+{product.colors.length - 3}</span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </CardContent>
     </Card>

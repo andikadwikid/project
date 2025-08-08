@@ -102,11 +102,17 @@ export async function GET(request: NextRequest) {
       isNew: false, // You can add logic for new products
       isSale: false, // You can add sale logic
       colors: product.colors.map((color) => ({
-        name: color.colorName,
-        value: color.hexCode || '#000000',
+        id: color.id,
+        code: color.code,
+        colorName: color.colorName,
+        hexCode: color.hexCode || '#000000',
+        imageUrl: color.imageUrl,
       })),
       sizes: product.sizes.map((size) => ({
-        name: size.sizeLabel,
+        id: size.id,
+        code: size.code,
+        sizeLabel: size.sizeLabel,
+        cmValue: size.cmValue,
       })),
       images: product.images.map((img) => img.imageUrl),
     }))

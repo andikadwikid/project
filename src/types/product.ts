@@ -12,23 +12,37 @@ export interface ProductImage {
   };
 }
 
+export interface ProductColor {
+  id: number;
+  code: string;
+  colorName: string;
+  hexCode: string;
+  imageUrl?: string;
+}
+
+export interface ProductSize {
+  id: number;
+  code: string;
+  sizeLabel: string;
+  cmValue?: number;
+}
+
 export interface Product {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
   originalPrice?: number;
   image: string;
-  images: string[];
+  images?: ProductImage[];
   category: string;
   brand: string;
   description: string;
-  sizes: Array<{ name: string }>;
-  colors: Array<{ name: string; value: string }>;
+  sizes?: ProductSize[];
+  colors?: ProductColor[];
   isNew?: boolean;
   isSale?: boolean;
   rating?: number;
   reviews?: number;
-  productImages?: ProductImage[];
 }
 
 export interface Category {
