@@ -93,6 +93,7 @@ model ProductSizePivot {
   id        Int      @id @default(autoincrement())
   productId Int      @map("product_id")
   sizeId    Int      @map("size_id")
+  cmValue   Decimal? @map("cm_value") @db.Decimal(4, 1)
   createdAt DateTime @default(now()) @map("created_at")
   
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)

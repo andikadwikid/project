@@ -44,6 +44,7 @@ interface Size {
   sizeLabel: string
   code: string
   cmValue?: number
+  pivotId?: number
 }
 
 interface ProductImage {
@@ -89,7 +90,7 @@ const EditProduct = () => {
     categoryId: '',
     brandId: '',
     selectedColors: [] as number[],
-    selectedSizes: [] as number[],
+    selectedSizes: [] as { id: number; cmValue?: number }[],
     images: [] as string[],
     isActive: true
   })
@@ -126,7 +127,7 @@ const EditProduct = () => {
             categoryId: prod.categoryId.toString(),
             brandId: prod.brandId.toString(),
             selectedColors: prod.colors.map((c: Color) => c.id),
-            selectedSizes: prod.sizes.map((s: Size) => s.id),
+            selectedSizes: prod.sizes.map((s: Size) => ({ id: s.id, cmValue: s.cmValue })),
             images: prod.images.map((img: ProductImage) => img.imageUrl),
             isActive: prod.isActive
           })
@@ -165,7 +166,7 @@ const EditProduct = () => {
           categoryId: parseInt(formData.categoryId),
           brandId: parseInt(formData.brandId),
           colorIds: formData.selectedColors,
-          sizeIds: formData.selectedSizes,
+          sizes: formData.selectedSizes,
           images: formData.images,
           isActive: formData.isActive
         })
@@ -196,11 +197,29 @@ const EditProduct = () => {
   }
 
   const handleSizeToggle = (sizeId: number) => {
+    const size = availableSizes.find(s => s.id === sizeId)
+    setFormData(prev => {
+      const isSelected = prev.selectedSizes.some(s => s.id === sizeId)
+      if (isSelected) {
+        return {
+          ...prev,
+          selectedSizes: prev.selectedSizes.filter(s => s.id !== sizeId)
+        }
+      } else {
+        return {
+          ...prev,
+          selectedSizes: [...prev.selectedSizes, { id: sizeId, cmValue: size?.cmValue }]
+        }
+      }
+    })
+  }
+
+  const handleSizeCmValueChange = (sizeId: number, cmValue: string) => {
     setFormData(prev => ({
       ...prev,
-      selectedSizes: prev.selectedSizes.includes(sizeId)
-        ? prev.selectedSizes.filter(id => id !== sizeId)
-        : [...prev.selectedSizes, sizeId]
+      selectedSizes: prev.selectedSizes.map(s => 
+        s.id === sizeId ? { ...s, cmValue: cmValue ? parseFloat(cmValue) : undefined } : s
+      )
     }))
   }
 
@@ -399,20 +418,48 @@ const EditProduct = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                {availableSizes.map((size) => (
-                  <div
-                    key={size.id}
-                    className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                      formData.selectedSizes.includes(size.id)
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => handleSizeToggle(size.id)}
-                  >
-                    <span className="text-sm font-medium">{size.sizeLabel}</span>
-                  </div>
-                ))}
+                {availableSizes.map((size) => {
+                  const isSelected = formData.selectedSizes.some(s => s.id === size.id)
+                  return (
+                    <div
+                      key={size.id}
+                      className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                        isSelected
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => handleSizeToggle(size.id)}
+                    >
+                      <span className="text-sm font-medium">{size.sizeLabel}</span>
+                    </div>
+                  )
+                })}
               </div>
+              
+              {/* CM Value inputs for selected sizes */}
+              {formData.selectedSizes.length > 0 && (
+                <div className="mt-6 space-y-4">
+                  <Label className="text-sm font-medium">Size CM Values (Optional)</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {formData.selectedSizes.map((selectedSize) => {
+                      const size = availableSizes.find(s => s.id === selectedSize.id)
+                      return (
+                        <div key={selectedSize.id} className="space-y-2">
+                          <Label className="text-xs text-gray-600">{size?.sizeLabel}</Label>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            placeholder={`Default: ${size?.cmValue || 'N/A'}`}
+                            value={selectedSize.cmValue || ''}
+                            onChange={(e) => handleSizeCmValueChange(selectedSize.id, e.target.value)}
+                            className="text-sm"
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -441,7 +488,7 @@ const EditProduct = () => {
                     {formData.images.map((imageUrl, index) => (
                       <div key={index} className="flex items-center space-x-2 p-2 border rounded">
                         <Image
-                          src={imageUrl}
+                          src={imageUrl || '/images/placeholder.svg'}
                           alt={`Product image ${index + 1}`}
                           width={48}
                           height={48}

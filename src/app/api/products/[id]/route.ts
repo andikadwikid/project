@@ -93,7 +93,8 @@ export async function GET(
         id: sizePivot.size.id,
         code: sizePivot.size.code,
         sizeLabel: sizePivot.size.sizeLabel,
-        cmValue: sizePivot.size.cmValue,
+        cmValue: sizePivot.cmValue || sizePivot.size.cmValue,
+        pivotId: sizePivot.id,
       })),
       images: product.images.map((image) => ({
         id: image.id,
@@ -131,7 +132,7 @@ export async function PUT(
       brandId,
       price,
       colorIds = [],
-      sizeIds = [],
+      sizes = [],
       images = [],
       isActive = true,
     } = body;
@@ -208,11 +209,12 @@ export async function PUT(
         where: { productId },
       });
 
-      if (sizeIds.length > 0) {
-        // Create new pivot entries for this product
-        const sizeData = sizeIds.map((sizeId: number) => ({
+      if (sizes.length > 0) {
+        // Create new pivot entries for this product with custom cmValue
+        const sizeData = sizes.map((size: { id: number; cmValue?: number }) => ({
           productId,
-          sizeId,
+          sizeId: size.id,
+          cmValue: size.cmValue ? parseFloat(size.cmValue.toString()) : null,
         }));
 
         await tx.productSizePivot.createMany({

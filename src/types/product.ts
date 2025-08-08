@@ -28,6 +28,20 @@ export interface ProductSize {
   code: string;
   sizeLabel: string;
   cmValue?: number;
+  pivotId?: number;
+}
+
+export interface ProductSizePivot {
+  id: number;
+  productId: number;
+  sizeId: number;
+  cmValue?: number;
+  size: {
+    id: number;
+    code: string;
+    sizeLabel: string;
+    cmValue?: number;
+  };
 }
 
 export interface Product {

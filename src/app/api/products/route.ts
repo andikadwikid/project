@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
       brandId,
       price,
       colorIds = [],
-      sizeIds = [],
+      sizes = [],
       images = [],
       isActive = true
     } = body
@@ -208,13 +208,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Associate sizes with product
-    if (sizeIds.length > 0) {
+    if (sizes.length > 0) {
       await Promise.all(
-        sizeIds.map((sizeId: number) =>
+        sizes.map((size: { id: number; cmValue?: number }) =>
           prisma.productSizePivot.create({
             data: {
               productId: product.id,
-              sizeId: sizeId
+              sizeId: size.id,
+              cmValue: size.cmValue
             }
           })
         )
