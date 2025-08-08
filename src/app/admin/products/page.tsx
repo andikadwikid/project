@@ -18,7 +18,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog'
 import { Plus, Edit, Trash2, Search, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
