@@ -35,7 +35,7 @@ interface Brand {
 
 interface Color {
   id: number
-  colorName: string
+  name: string
   hexCode: string
   code: string
 }
@@ -402,7 +402,7 @@ const EditProduct = () => {
                       className="w-6 h-6 rounded-full border border-gray-200"
                       style={{ backgroundColor: color.hexCode }}
                     />
-                    <span className="text-sm font-medium">{color.colorName}</span>
+                    <span className="text-sm font-medium">{color.name}</span>
                   </div>
                 ))}
               </div>

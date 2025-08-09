@@ -199,9 +199,11 @@ export async function POST(request: NextRequest) {
     if (colorIds.length > 0) {
       await Promise.all(
         colorIds.map((colorId: number) =>
-          prisma.productColor.update({
-            where: { id: colorId },
-            data: { productId: product.id }
+          prisma.productColor.create({
+            data: {
+              productId: product.id,
+              colorId: colorId
+            }
           })
         )
       )

@@ -183,8 +183,8 @@ const AdminProducts = () => {
                             </div>
                         </div>
                         <div className="flex space-x-2">
-                            <Button 
-                                variant="outline" 
+                            <Button
+                                variant="outline"
                                 onClick={() => setImportDialogOpen(true)}
                             >
                                 <Upload className="h-4 w-4 mr-2" />
@@ -251,10 +251,10 @@ const AdminProducts = () => {
                                                         width={48}
                                                         height={48}
                                                         className="w-12 h-12 object-cover rounded"
-                                                        onError={(e) => {
-                                                            const target = e.target as HTMLImageElement
-                                                            target.src = '/images/placeholder.svg'
-                                                        }}
+                                                    // onError={(e) => {
+                                                    //     const target = e.target as HTMLImageElement
+                                                    //     target.src = '/images/placeholder.svg'
+                                                    // }}
                                                     />
                                                 </TableCell>
                                                 <TableCell className="font-medium">{product.name}</TableCell>
@@ -379,9 +379,9 @@ const AdminProducts = () => {
                                     <p className="text-sm text-gray-600">
                                         Upload an Excel file to import products. Make sure your Excel file follows the required format.
                                     </p>
-                                    <Button 
-                                        variant="outline" 
-                                        size="sm" 
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
                                         onClick={downloadTemplate}
                                         className="w-full"
                                     >
@@ -389,7 +389,7 @@ const AdminProducts = () => {
                                         Download Template
                                     </Button>
                                 </div>
-                                
+
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Select Excel File</label>
                                     <Input
@@ -398,13 +398,13 @@ const AdminProducts = () => {
                                         onChange={(e) => setImportFile(e.target.files?.[0] || null)}
                                     />
                                 </div>
-                                
+
                                 <div className="flex justify-end space-x-2">
                                     <Button variant="outline" onClick={resetImportDialog}>
                                         Cancel
                                     </Button>
-                                    <Button 
-                                        onClick={handleImport} 
+                                    <Button
+                                        onClick={handleImport}
                                         disabled={!importFile || importing}
                                     >
                                         {importing ? (
@@ -425,7 +425,7 @@ const AdminProducts = () => {
                             <>
                                 <div className="space-y-3">
                                     <h3 className="font-medium">Import Results</h3>
-                                    
+
                                     {importResult.success ? (
                                         <div className="space-y-2">
                                             <div className="bg-green-50 border border-green-200 rounded-md p-3">
@@ -433,7 +433,7 @@ const AdminProducts = () => {
                                                     Import completed successfully!
                                                 </p>
                                             </div>
-                                            
+
                                             <div className="grid grid-cols-2 gap-4 text-sm">
                                                 <div>
                                                     <span className="font-medium">Total Rows:</span>
@@ -448,7 +448,7 @@ const AdminProducts = () => {
                                                     <span className="ml-2 text-red-600">{importResult.data?.failedCount || 0}</span>
                                                 </div>
                                             </div>
-                                            
+
                                             {importResult.data?.errors && importResult.data.errors.length > 0 && (
                                                 <div className="space-y-2">
                                                     <p className="font-medium text-sm">Errors:</p>
@@ -468,7 +468,7 @@ const AdminProducts = () => {
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 <div className="flex justify-end">
                                     <Button onClick={resetImportDialog}>
                                         Close
