@@ -62,9 +62,9 @@ export async function PUT(
       );
     }
 
-    if (!sizeLabel) {
+    if (!sizeLabel || !code) {
       return NextResponse.json(
-        { success: false, error: "Size label is required" },
+        { success: false, error: "Size label and code are required" },
         { status: 400 }
       );
     }
@@ -96,11 +96,26 @@ export async function PUT(
       );
     }
 
+    // Check if code already exists (excluding current size)
+    const codeExists = await prisma.size.findFirst({
+      where: {
+        code: code,
+        id: { not: sizeId },
+      },
+    });
+
+    if (codeExists) {
+      return NextResponse.json(
+        { success: false, error: "Size code already exists" },
+        { status: 400 }
+      );
+    }
+
     const updatedSize = await prisma.size.update({
       where: { id: sizeId },
       data: {
         sizeLabel: sizeLabel,
-        code: code || existingSize.code,
+        code: code,
       },
     });
 
@@ -111,7 +126,7 @@ export async function PUT(
   } catch (error) {
     console.error("Error updating size:", error);
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
+      { success: false, error: "Failed to update size" },
       { status: 500 }
     );
   }

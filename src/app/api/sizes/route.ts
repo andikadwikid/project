@@ -35,23 +35,50 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { sizeLabel, code, cmValue } = body
 
-    if (!sizeLabel) {
+    if (!sizeLabel || !code) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Size label is required',
+          error: 'Size label and code are required',
         },
         { status: 400 }
       )
     }
 
-    // Generate code if not provided
-    const sizeCode = code || `SIZE-${Date.now()}`
+    // Check if size label already exists
+    const existingSizeLabel = await prisma.size.findFirst({
+      where: { sizeLabel },
+    })
+
+    if (existingSizeLabel) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Size label already exists',
+        },
+        { status: 400 }
+      )
+    }
+
+    // Check if size code already exists
+    const existingSizeCode = await prisma.size.findFirst({
+      where: { code },
+    })
+
+    if (existingSizeCode) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Size code already exists',
+        },
+        { status: 400 }
+      )
+    }
 
     const size = await prisma.size.create({
       data: {
         sizeLabel,
-        code: sizeCode,
+        code,
         cmValue: cmValue || null,
       },
     })

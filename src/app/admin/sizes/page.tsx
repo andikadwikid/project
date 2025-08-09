@@ -38,6 +38,12 @@ const AdminSizes = () => {
   const [editingSize, setEditingSize] = useState<Size | null>(null)
   const [formData, setFormData] = useState({ sizeLabel: '', code: '' })
 
+  const resetForm = () => {
+    setFormData({ sizeLabel: '', code: '' })
+    setEditingSize(null)
+    setDialogOpen(false)
+  }
+
   const fetchSizes = async () => {
     try {
       setLoading(true)
@@ -58,8 +64,11 @@ const AdminSizes = () => {
     e.preventDefault()
     
     try {
-      const response = await fetch('/api/sizes', {
-        method: 'POST',
+      const url = editingSize ? `/api/sizes/${editingSize.id}` : '/api/sizes'
+      const method = editingSize ? 'PUT' : 'POST'
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json'
         },
@@ -67,10 +76,12 @@ const AdminSizes = () => {
       })
       
       if (response.ok) {
-        await fetchSizes()
-        setDialogOpen(false)
-        setFormData({ sizeLabel: '', code: '' })
-        setEditingSize(null)
+        console.log(`Size ${editingSize ? 'updated' : 'created'} successfully!`)
+        resetForm()
+        fetchSizes()
+      } else {
+        const errorData = await response.json()
+        console.error(`Error: ${errorData.error}`)
       }
     } catch (error) {
       console.error('Error saving size:', error)
@@ -86,6 +97,26 @@ const AdminSizes = () => {
       setFormData({ sizeLabel: '', code: '' })
     }
     setDialogOpen(true)
+  }
+
+  const handleDelete = async (size: Size) => {
+    if (confirm(`Are you sure you want to delete the size "${size.sizeLabel}"?`)) {
+      try {
+        const response = await fetch(`/api/sizes/${size.id}`, {
+          method: 'DELETE',
+        })
+
+        if (response.ok) {
+          console.log('Size deleted successfully!')
+          fetchSizes()
+        } else {
+          const errorData = await response.json()
+          console.error(`Error: ${errorData.error}`)
+        }
+      } catch (error) {
+        console.error('Error deleting size:', error)
+      }
+    }
   }
 
   useEffect(() => {
@@ -157,6 +188,14 @@ const AdminSizes = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(size)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -182,14 +221,7 @@ const AdminSizes = () => {
               <Input
                 id="sizeLabel"
                 value={formData.sizeLabel}
-                onChange={(e) => {
-                  const sizeLabel = e.target.value
-                  setFormData(prev => ({
-                    ...prev,
-                    sizeLabel,
-                    code: sizeLabel.toUpperCase().replace(/\s+/g, '_').substring(0, 10)
-                  }))
-                }}
+                onChange={(e) => setFormData(prev => ({ ...prev, sizeLabel: e.target.value }))}
                 placeholder="e.g., Small, Medium, Large, XL, 42, 43"
                 required
               />
@@ -200,11 +232,12 @@ const AdminSizes = () => {
                 id="code"
                 value={formData.code}
                 onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value }))}
+                placeholder="e.g., S, M, L, XL, 42, 43"
                 required
               />
             </div>
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={resetForm}>
                 Cancel
               </Button>
               <Button type="submit">
