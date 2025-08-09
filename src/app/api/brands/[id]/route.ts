@@ -73,9 +73,9 @@ export async function PUT(
       )
     }
 
-    if (!name) {
+    if (!name || !code) {
       return NextResponse.json(
-        { success: false, error: 'Name is required' },
+        { success: false, error: 'Name and code are required' },
         { status: 400 }
       )
     }
@@ -107,11 +107,26 @@ export async function PUT(
       )
     }
 
+    // Check if code already exists (excluding current brand)
+    const codeExists = await prisma.brand.findFirst({
+      where: {
+        code,
+        id: { not: brandId },
+      },
+    })
+
+    if (codeExists) {
+      return NextResponse.json(
+        { success: false, error: 'Brand code already exists' },
+        { status: 400 }
+      )
+    }
+
     const updatedBrand = await prisma.brand.update({
       where: { id: brandId },
       data: {
         name,
-        code: code || existingBrand.code,
+        code,
       },
     })
 

@@ -54,26 +54,61 @@ const AdminBrands = () => {
     }
   }
 
+  const resetForm = () => {
+    setFormData({ name: '', code: '' })
+    setEditingBrand(null)
+    setDialogOpen(false)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     try {
-      const response = await fetch('/api/brands', {
-        method: 'POST',
+      const url = editingBrand ? `/api/brands/${editingBrand.id}` : '/api/brands'
+      const method = editingBrand ? 'PUT' : 'POST'
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       })
       
+      const data = await response.json()
+      
       if (response.ok) {
+        console.log(`Brand ${editingBrand ? 'updated' : 'created'} successfully`)
         await fetchBrands()
-        setDialogOpen(false)
-        setFormData({ name: '', code: '' })
-        setEditingBrand(null)
+        resetForm()
+      } else {
+        console.error('Error saving brand:', data.error)
       }
     } catch (error) {
       console.error('Error saving brand:', error)
+    }
+  }
+
+  const handleDelete = async (brand: Brand) => {
+    if (!confirm(`Are you sure you want to delete "${brand.name}"?`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/brands/${brand.id}`, {
+        method: 'DELETE'
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        console.log('Brand deleted successfully')
+        await fetchBrands()
+      } else {
+        console.error('Error deleting brand:', data.error)
+      }
+    } catch (error) {
+      console.error('Error deleting brand:', error)
     }
   }
 
@@ -157,6 +192,14 @@ const AdminBrands = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(brand)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -182,14 +225,8 @@ const AdminBrands = () => {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => {
-                  const name = e.target.value
-                  setFormData(prev => ({
-                    ...prev,
-                    name,
-                    code: name.toUpperCase().replace(/\s+/g, '_').substring(0, 10)
-                  }))
-                }}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Enter brand name"
                 required
               />
             </div>
@@ -198,12 +235,13 @@ const AdminBrands = () => {
               <Input
                 id="code"
                 value={formData.code}
-                onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value.toUpperCase() }))}
+                placeholder="e.g. NIKE, ADIDAS, PUMA"
                 required
               />
             </div>
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={resetForm}>
                 Cancel
               </Button>
               <Button type="submit">

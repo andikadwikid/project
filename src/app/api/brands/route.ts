@@ -44,21 +44,47 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name } = body
+    const { name, code } = body
 
-    if (!name) {
+    if (!name || !code) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Name is required',
+          error: 'Name and code are required',
         },
         { status: 400 }
       )
     }
 
-    // Generate brand code
-    const brandCount = await prisma.brand.count()
-    const code = `BR-${String(brandCount + 1).padStart(3, '0')}`
+    // Check if code already exists
+    const existingBrand = await prisma.brand.findFirst({
+      where: { code },
+    })
+
+    if (existingBrand) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Brand code already exists',
+        },
+        { status: 400 }
+      )
+    }
+
+    // Check if name already exists
+    const existingName = await prisma.brand.findFirst({
+      where: { name },
+    })
+
+    if (existingName) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Brand name already exists',
+        },
+        { status: 400 }
+      )
+    }
 
     const brand = await prisma.brand.create({
       data: {
