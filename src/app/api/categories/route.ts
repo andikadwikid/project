@@ -44,21 +44,34 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name } = body
+    const { name, code } = body
 
-    if (!name) {
+    if (!name || !code) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Name is required',
+          error: 'Name and code are required',
         },
         { status: 400 }
       )
     }
 
-    // Generate category code
-    const categoryCount = await prisma.category.count()
-    const code = `CAT-${String(categoryCount + 1).padStart(3, '0')}`
+    // Check if code already exists
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        code: code
+      }
+    })
+
+    if (existingCategory) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Category code already exists',
+        },
+        { status: 400 }
+      )
+    }
 
     const category = await prisma.category.create({
       data: {

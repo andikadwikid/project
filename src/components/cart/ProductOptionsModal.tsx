@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { X, ShoppingBag, Check } from 'lucide-react';
+import { ShoppingBag, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Product, ProductColor, ProductSize } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/utils';
@@ -33,7 +32,7 @@ const ProductOptionsModal = ({ product, isOpen, onClose }: ProductOptionsModalPr
       toast.error('Please select a color');
       return;
     }
-    
+
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
       toast.error('Please select a size');
       return;
@@ -108,11 +107,10 @@ const ProductOptionsModal = ({ product, isOpen, onClose }: ProductOptionsModalPr
                   <button
                     key={color.id}
                     onClick={() => setSelectedColor(color)}
-                    className={`relative flex items-center gap-2 px-3 py-2 rounded-lg border transition-all ${
-                      selectedColor?.id === color.id
+                    className={`relative flex items-center gap-2 px-3 py-2 rounded-lg border transition-all ${selectedColor?.id === color.id
                         ? 'border-pink-500 bg-pink-50 text-pink-700'
                         : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                      }`}
                   >
                     <div
                       className="w-4 h-4 rounded-full border border-gray-200"
@@ -137,11 +135,10 @@ const ProductOptionsModal = ({ product, isOpen, onClose }: ProductOptionsModalPr
                   <button
                     key={size.id}
                     onClick={() => setSelectedSize(size)}
-                    className={`relative px-3 py-2 text-sm font-medium rounded-lg border transition-all ${
-                      selectedSize?.id === size.id
+                    className={`relative px-3 py-2 text-sm font-medium rounded-lg border transition-all ${selectedSize?.id === size.id
                         ? 'border-pink-500 bg-pink-500 text-white'
                         : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                    }`}
+                      }`}
                   >
                     {size.sizeLabel}
                     {size.cmValue && (

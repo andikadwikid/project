@@ -19,7 +19,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -43,7 +42,7 @@ const AdminCategories = () => {
       setLoading(true)
       const response = await fetch('/api/categories')
       const data = await response.json()
-      
+
       if (data.success) {
         setCategories(data.data)
       }
@@ -56,24 +55,54 @@ const AdminCategories = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
-      const response = await fetch('/api/categories', {
-        method: 'POST',
+      const url = editingCategory ? `/api/categories/${editingCategory.id}` : '/api/categories'
+      const method = editingCategory ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       })
-      
+
       if (response.ok) {
         await fetchCategories()
-        setDialogOpen(false)
-        setFormData({ name: '', code: '' })
-        setEditingCategory(null)
+        resetForm()
+        // You can add toast notification here if needed
+        console.log(editingCategory ? 'Category updated successfully' : 'Category created successfully')
+      } else {
+        const errorData = await response.json()
+        console.error('Error:', errorData.error)
+        alert(errorData.error || 'Failed to save category')
       }
     } catch (error) {
       console.error('Error saving category:', error)
+    }
+  }
+
+  const handleDelete = async (categoryId: number) => {
+    if (!confirm('Are you sure you want to delete this category?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchCategories()
+        console.log('Category deleted successfully')
+      } else {
+        const errorData = await response.json()
+        console.error('Error:', errorData.error)
+        alert(errorData.error || 'Failed to delete category')
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error)
     }
   }
 
@@ -86,6 +115,12 @@ const AdminCategories = () => {
       setFormData({ name: '', code: '' })
     }
     setDialogOpen(true)
+  }
+
+  const resetForm = () => {
+    setFormData({ name: '', code: '' })
+    setEditingCategory(null)
+    setDialogOpen(false)
   }
 
   useEffect(() => {
@@ -157,6 +192,14 @@ const AdminCategories = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(category.id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -182,14 +225,7 @@ const AdminCategories = () => {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => {
-                  const name = e.target.value
-                  setFormData(prev => ({
-                    ...prev,
-                    name,
-                    code: name.toUpperCase().replace(/\s+/g, '_').substring(0, 10)
-                  }))
-                }}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 required
               />
             </div>
@@ -198,12 +234,13 @@ const AdminCategories = () => {
               <Input
                 id="code"
                 value={formData.code}
-                onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value.toUpperCase() }))}
+                placeholder="e.g. SNEAKERS, BOOTS, etc."
                 required
               />
             </div>
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={resetForm}>
                 Cancel
               </Button>
               <Button type="submit">
