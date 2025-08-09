@@ -17,7 +17,7 @@ File Excel harus memiliki header dengan kolom-kolom berikut:
 | `price` | ✅ | Harga produk (angka) | "150.00" |
 | `colorCodes` | ❌ | Kode warna (dipisah koma) | "BLACK,WHITE,RED" |
 | `sizeCodes` | ❌ | Kode ukuran (dipisah koma) | "SIZE-38,SIZE-39,SIZE-40" |
-| `imageUrls` | ❌ | URL gambar (dipisah koma) | "https://example.com/img1.jpg,https://example.com/img2.jpg" |
+| `imageUrls` | ❌ | URL gambar (dipisah koma) atau embedded images | "https://example.com/img1.jpg,https://example.com/img2.jpg" |
 | `isActive` | ❌ | Status aktif produk | "true" atau "false" (default: true) |
 
 ### Available Codes
@@ -97,6 +97,14 @@ The Excel file should have the following structure:
 - `sizeCodes`: Jika diisi, semua kode harus valid
 - `imageUrls`: Jika diisi, akan diset sebagai gambar produk
 - `isActive`: Default true jika tidak diisi
+
+### Embedded Images Support
+- **NEW FEATURE**: Sistem sekarang mendukung gambar yang di-embed langsung di Excel
+- Gambar yang di-embed akan otomatis di-extract dan di-upload ke server
+- Gambar embedded memiliki prioritas lebih tinggi daripada `imageUrls`
+- Gambar akan disimpan di `/public/images/products/` dengan nama unik
+- Format yang didukung: PNG, JPG, JPEG, GIF
+- Ukuran maksimal per gambar: 5MB
 
 ### Error Handling
 - Jika ada error pada satu baris, baris tersebut akan di-skip

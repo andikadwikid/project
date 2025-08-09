@@ -1,0 +1,27 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f5f5f5" stroke="#ccc" stroke-width="2"/>
+  <rect x="50" y="120" width="300" height="80" fill="#1a1a1a" rx="8"/>
+  <rect x="60" y="130" width="280" height="60" fill="#333" rx="4"/>
+  <!-- Keys -->
+  <g fill="#555">
+    <rect x="70" y="140" width="15" height="15" rx="2"/>
+    <rect x="90" y="140" width="15" height="15" rx="2"/>
+    <rect x="110" y="140" width="15" height="15" rx="2"/>
+    <rect x="130" y="140" width="15" height="15" rx="2"/>
+    <rect x="150" y="140" width="15" height="15" rx="2"/>
+    <rect x="170" y="140" width="15" height="15" rx="2"/>
+    <rect x="190" y="140" width="15" height="15" rx="2"/>
+    <rect x="210" y="140" width="15" height="15" rx="2"/>
+    <rect x="230" y="140" width="15" height="15" rx="2"/>
+    <rect x="250" y="140" width="15" height="15" rx="2"/>
+    <rect x="270" y="140" width="15" height="15" rx="2"/>
+    <rect x="290" y="140" width="15" height="15" rx="2"/>
+    <rect x="310" y="140" width="15" height="15" rx="2"/>
+  </g>
+  <!-- RGB Effect -->
+  <circle cx="77" cy="147" r="3" fill="#ff0000" opacity="0.7"/>
+  <circle cx="97" cy="147" r="3" fill="#00ff00" opacity="0.7"/>
+  <circle cx="117" cy="147" r="3" fill="#0000ff" opacity="0.7"/>
+  <circle cx="137" cy="147" r="3" fill="#ff00ff" opacity="0.7"/>
+  <text x="200" y="250" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">Keyboard Mechanical RGB</text>
+</svg>

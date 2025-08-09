@@ -1,0 +1,11 @@
+name,code,description,price,category,stock,image_url,status
+Laptop Gaming ASUS ROG,LAPTOP-ASUS-ROG-001,"Laptop gaming dengan spesifikasi tinggi, RAM 16GB, SSD 512GB",15000000,Electronics,10,laptop-asus-rog.jpg,active
+Mouse Wireless Logitech MX,MOUSE-LOGITECH-MX-001,"Mouse nirkabel dengan sensor presisi tinggi, battery tahan lama",250000,Electronics,25,mouse-logitech-mx.png,active
+Keyboard Mechanical RGB,KEYBOARD-MECH-RGB-001,"Keyboard gaming mechanical dengan backlight RGB, switch blue",800000,Electronics,15,keyboard-mech-rgb.jpg,active
+Headset Gaming HyperX,HEADSET-HYPERX-001,"Headset gaming dengan surround sound 7.1, microphone noise cancelling",450000,Electronics,20,headset-hyperx.jpg,active
+Webcam HD 1080p,WEBCAM-HD-1080P-001,"Webcam dengan resolusi Full HD, autofocus, built-in microphone",180000,Electronics,30,webcam-hd-1080p.png,active
+Speaker Bluetooth JBL,SPEAKER-JBL-BT-001,"Speaker portable dengan koneksi Bluetooth 5.0, bass yang powerful",320000,Electronics,18,speaker-jbl-bluetooth.jpg,active
+Charger Laptop Universal,CHARGER-LAPTOP-UNI-001,"Charger laptop universal dengan berbagai tip connector, output 90W",125000,Electronics,40,charger-laptop-universal.jpg,active
+Hard Drive External 1TB,HDD-EXT-1TB-001,"Hard drive eksternal dengan kapasitas 1TB, koneksi USB 3.0",650000,Electronics,12,hdd-external-1tb.png,active
+Power Bank 20000mAh,POWERBANK-20000-001,"Power bank dengan kapasitas 20000mAh, fast charging, dual USB port",180000,Electronics,35,powerbank-20000mah.jpg,active
+Cable HDMI 4K,CABLE-HDMI-4K-001,"Kabel HDMI dengan support 4K resolution, panjang 2 meter",45000,Electronics,50,cable-hdmi-4k.jpg,active

@@ -1,0 +1,23 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f9f9f9" stroke="#ddd" stroke-width="2"/>
+  <!-- Headband -->
+  <path d="M 120 80 Q 200 40 280 80" stroke="#222" stroke-width="8" fill="none"/>
+  <path d="M 120 80 Q 200 50 280 80" stroke="#444" stroke-width="4" fill="none"/>
+  <!-- Left Ear Cup -->
+  <circle cx="120" cy="120" r="35" fill="#1a1a1a"/>
+  <circle cx="120" cy="120" r="30" fill="#333"/>
+  <circle cx="120" cy="120" r="20" fill="#555"/>
+  <!-- Right Ear Cup -->
+  <circle cx="280" cy="120" r="35" fill="#1a1a1a"/>
+  <circle cx="280" cy="120" r="30" fill="#333"/>
+  <circle cx="280" cy="120" r="20" fill="#555"/>
+  <!-- Microphone -->
+  <line x1="120" y1="155" x2="100" y2="180" stroke="#666" stroke-width="3"/>
+  <circle cx="95" cy="185" r="4" fill="#888"/>
+  <!-- Connecting Arms -->
+  <line x1="120" y1="80" x2="120" y2="85" stroke="#333" stroke-width="6"/>
+  <line x1="280" y1="80" x2="280" y2="85" stroke="#333" stroke-width="6"/>
+  <!-- Brand Logo Area -->
+  <rect x="110" y="110" width="20" height="8" fill="#ff0000" opacity="0.8"/>
+  <text x="200" y="250" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">Headset Gaming HyperX</text>
+</svg>

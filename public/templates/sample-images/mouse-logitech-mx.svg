@@ -1,0 +1,10 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f8f8f8" stroke="#ddd" stroke-width="2"/>
+  <ellipse cx="200" cy="150" rx="60" ry="100" fill="#2c2c2c"/>
+  <ellipse cx="200" cy="140" rx="50" ry="80" fill="#444"/>
+  <rect x="190" y="80" width="20" height="40" fill="#666" rx="10"/>
+  <circle cx="200" cy="100" r="8" fill="#888"/>
+  <ellipse cx="180" cy="120" rx="15" ry="20" fill="#555"/>
+  <ellipse cx="220" cy="120" rx="15" ry="20" fill="#555"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">Mouse Wireless Logitech MX</text>
+</svg>

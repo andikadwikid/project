@@ -44,14 +44,15 @@ const AdminProducts = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [productToDelete, setProductToDelete] = useState<Product | null>(null)
     const [importDialogOpen, setImportDialogOpen] = useState(false)
-    const [importFile, setImportFile] = useState<File | null>(null)
+    const [excelFile, setExcelFile] = useState<File | null>(null)
+    const [zipFile, setZipFile] = useState<File | null>(null)
     const [importing, setImporting] = useState(false)
     const [importResult, setImportResult] = useState<{
         success: boolean;
-        data?: {
-            totalRows: number;
-            successCount: number;
-            failedCount: number;
+        message?: string;
+        results?: {
+            success: number;
+            failed: number;
             errors: string[];
         };
         error?: string;
@@ -103,12 +104,17 @@ const AdminProducts = () => {
     }
 
     const handleImport = async () => {
-        if (!importFile) return
+        if (!excelFile) return
 
         try {
             setImporting(true)
             const formData = new FormData()
-            formData.append('file', importFile)
+            formData.append('excelFile', excelFile)
+            
+            // Add ZIP file if provided
+            if (zipFile) {
+                formData.append('zipFile', zipFile)
+            }
 
             const response = await fetch('/api/products/import', {
                 method: 'POST',
@@ -134,26 +140,18 @@ const AdminProducts = () => {
 
     const resetImportDialog = () => {
         setImportDialogOpen(false)
-        setImportFile(null)
-        setImportResult(null)
+        setExcelFile(null)
+        setZipFile(null)
         setImporting(false)
+        setImportResult(null)
     }
 
-    const downloadTemplate = async () => {
-        try {
-            const response = await fetch('/api/products/template')
-            const blob = await response.blob()
-            const url = window.URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = 'product_import_template.xlsx'
-            document.body.appendChild(a)
-            a.click()
-            document.body.removeChild(a)
-            window.URL.revokeObjectURL(url)
-        } catch (error) {
-            console.error('Error downloading template:', error)
-        }
+    const downloadTemplate = () => {
+        // Download the pre-made CSV template
+        const a = document.createElement('a')
+        a.href = '/templates/product-import-template.csv'
+        a.download = 'product-import-template.csv'
+        a.click()
     }
 
     useEffect(() => {
@@ -372,35 +370,76 @@ const AdminProducts = () => {
 
             {/* Import Dialog */}
             <Dialog open={importDialogOpen} onOpenChange={resetImportDialog}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>Import Products from Excel</DialogTitle>
+                        <DialogTitle>Import Products with Images</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         {!importResult ? (
                             <>
                                 <div className="space-y-2">
                                     <p className="text-sm text-gray-600">
-                                        Upload an Excel file to import products. Make sure your Excel file follows the required format.
+                                        Upload an Excel file with product data and optionally a ZIP file containing product images.
                                     </p>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={downloadTemplate}
-                                        className="w-full"
-                                    >
-                                        <Download className="h-4 w-4 mr-2" />
-                                        Download Template
-                                    </Button>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={downloadTemplate}
+                                        >
+                                            <Download className="h-4 w-4 mr-2" />
+                                            Excel Template
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                                const a = document.createElement('a')
+                                                a.href = '/templates/product-images-sample.zip'
+                                                a.download = 'product-images-sample.zip'
+                                                a.click()
+                                            }}
+                                        >
+                                            <Download className="h-4 w-4 mr-2" />
+                                            Sample ZIP
+                                        </Button>
+                                    </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Select Excel File</label>
-                                    <Input
-                                        type="file"
-                                        accept=".xlsx,.xls"
-                                        onChange={(e) => setImportFile(e.target.files?.[0] || null)}
-                                    />
+                                <div className="grid grid-cols-1 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-red-600">Excel File (Required) *</label>
+                                        <Input
+                                            type="file"
+                                            accept=".xlsx,.xls"
+                                            onChange={(e) => setExcelFile(e.target.files?.[0] || null)}
+                                        />
+                                        <p className="text-xs text-gray-500">
+                                            Excel file containing product data with columns: name, description, price, category, etc.
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-blue-600">ZIP File (Optional)</label>
+                                        <Input
+                                            type="file"
+                                            accept=".zip"
+                                            onChange={(e) => setZipFile(e.target.files?.[0] || null)}
+                                        />
+                                        <p className="text-xs text-gray-500">
+                                            ZIP file containing product images. Image filenames should match the image_url column in Excel.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                                    <h4 className="text-sm font-medium text-blue-800 mb-1">How it works:</h4>
+                                    <ul className="text-xs text-blue-700 space-y-1">
+                                        <li>• Excel file contains product data with image_url column</li>
+                                        <li>• ZIP file contains actual image files</li>
+                                        <li>• System matches image_url values with filenames in ZIP</li>
+                                        <li>• Images are automatically uploaded and linked to products</li>
+                                    </ul>
                                 </div>
 
                                 <div className="flex justify-end space-x-2">
@@ -409,7 +448,7 @@ const AdminProducts = () => {
                                     </Button>
                                     <Button
                                         onClick={handleImport}
-                                        disabled={!importFile || importing}
+                                        disabled={!excelFile || importing}
                                     >
                                         {importing ? (
                                             <>
@@ -419,7 +458,7 @@ const AdminProducts = () => {
                                         ) : (
                                             <>
                                                 <Upload className="h-4 w-4 mr-2" />
-                                                Import
+                                                Import Products
                                             </>
                                         )}
                                     </Button>
@@ -434,32 +473,32 @@ const AdminProducts = () => {
                                         <div className="space-y-2">
                                             <div className="bg-green-50 border border-green-200 rounded-md p-3">
                                                 <p className="text-green-800 text-sm">
-                                                    Import completed successfully!
+                                                    {importResult.message || 'Import completed successfully!'}
                                                 </p>
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                                <div>
-                                                    <span className="font-medium">Total Rows:</span>
-                                                    <span className="ml-2">{importResult.data?.totalRows || 0}</span>
+                                            {importResult.results && (
+                                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                                    <div>
+                                                        <span className="font-medium">Success:</span>
+                                                        <span className="ml-2 text-green-600">{importResult.results.success}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className="font-medium">Failed:</span>
+                                                        <span className="ml-2 text-red-600">{importResult.results.failed}</span>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <span className="font-medium">Success:</span>
-                                                    <span className="ml-2 text-green-600">{importResult.data?.successCount || 0}</span>
-                                                </div>
-                                                <div>
-                                                    <span className="font-medium">Failed:</span>
-                                                    <span className="ml-2 text-red-600">{importResult.data?.failedCount || 0}</span>
-                                                </div>
-                                            </div>
+                                            )}
 
-                                            {importResult.data?.errors && importResult.data.errors.length > 0 && (
+                                            {importResult.results?.errors && importResult.results.errors.length > 0 && (
                                                 <div className="space-y-2">
-                                                    <p className="font-medium text-sm">Errors:</p>
+                                                    <h4 className="font-medium text-sm">Errors:</h4>
                                                     <div className="bg-red-50 border border-red-200 rounded-md p-3 max-h-32 overflow-y-auto">
-                                                        {importResult.data.errors.map((error: string, index: number) => (
-                                                            <p key={index} className="text-red-800 text-xs">{error}</p>
-                                                        ))}
+                                                        <ul className="text-red-800 text-xs space-y-1">
+                                                            {importResult.results.errors.map((error, index) => (
+                                                                <li key={index}>• {error}</li>
+                                                            ))}
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             )}
@@ -471,12 +510,12 @@ const AdminProducts = () => {
                                             </p>
                                         </div>
                                     )}
-                                </div>
 
-                                <div className="flex justify-end">
-                                    <Button onClick={resetImportDialog}>
-                                        Close
-                                    </Button>
+                                    <div className="flex justify-end">
+                                        <Button onClick={resetImportDialog}>
+                                            Close
+                                        </Button>
+                                    </div>
                                 </div>
                             </>
                         )}
