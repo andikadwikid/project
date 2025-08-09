@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Edit, ArrowLeft } from 'lucide-react'
+import { Plus, Edit, ArrowLeft, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
 interface Color {
@@ -37,6 +37,16 @@ const AdminColors = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingColor, setEditingColor] = useState<Color | null>(null)
   const [formData, setFormData] = useState({ name: '', hexCode: '#000000', code: '' })
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      hexCode: '#000000',
+      code: ''
+    })
+    setEditingColor(null)
+    setDialogOpen(false)
+  }
 
   const fetchColors = async () => {
     try {
@@ -56,24 +66,30 @@ const AdminColors = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    
     try {
       const url = editingColor ? `/api/colors/${editingColor.id}` : '/api/colors'
       const method = editingColor ? 'PUT' : 'POST'
-
+      
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          colorName: formData.name,
+          hexCode: formData.hexCode,
+          code: formData.code,
+        }),
       })
 
       if (response.ok) {
-        await fetchColors()
-        setDialogOpen(false)
-        setFormData({ name: '', hexCode: '#000000', code: '' })
-        setEditingColor(null)
+        console.log(`Color ${editingColor ? 'updated' : 'created'} successfully!`)
+        resetForm()
+        fetchColors()
+      } else {
+        const errorData = await response.json()
+        console.error(`Error: ${errorData.error}`)
       }
     } catch (error) {
       console.error('Error saving color:', error)
@@ -83,12 +99,36 @@ const AdminColors = () => {
   const openDialog = (color?: Color) => {
     if (color) {
       setEditingColor(color)
-      setFormData({ name: color.name, hexCode: color.hexCode, code: color.code })
+      setFormData({
+        name: color.name,
+        hexCode: color.hexCode,
+        code: color.code
+      })
     } else {
       setEditingColor(null)
       setFormData({ name: '', hexCode: '#000000', code: '' })
     }
     setDialogOpen(true)
+  }
+
+  const handleDelete = async (color: Color) => {
+    if (confirm(`Are you sure you want to delete the color "${color.name}"?`)) {
+      try {
+        const response = await fetch(`/api/colors/${color.id}`, {
+          method: 'DELETE',
+        })
+
+        if (response.ok) {
+          console.log('Color deleted successfully!')
+          fetchColors()
+        } else {
+          const errorData = await response.json()
+          console.error(`Error: ${errorData.error}`)
+        }
+      } catch (error) {
+        console.error('Error deleting color:', error)
+      }
+    }
   }
 
   useEffect(() => {
@@ -173,6 +213,14 @@ const AdminColors = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(color)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -196,18 +244,11 @@ const AdminColors = () => {
             <div>
               <Label htmlFor="name">Color Name</Label>
               <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => {
-                  const name = e.target.value
-                  setFormData(prev => ({
-                    ...prev,
-                    name,
-                    code: name.toUpperCase().replace(/\s+/g, '_').substring(0, 10)
-                  }))
-                }}
-                required
-              />
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  required
+                />
             </div>
             <div>
               <Label htmlFor="hexCode">Hex Color Value</Label>
@@ -235,11 +276,12 @@ const AdminColors = () => {
                 id="code"
                 value={formData.code}
                 onChange={(e) => setFormData(prev => ({ ...prev, code: e.target.value }))}
+                placeholder="e.g., RED, BLUE, GREEN"
                 required
               />
             </div>
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={resetForm}>
                 Cancel
               </Button>
               <Button type="submit">

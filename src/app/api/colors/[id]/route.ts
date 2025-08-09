@@ -70,9 +70,9 @@ export async function PUT(
       );
     }
 
-    if (!colorName || !hexCode) {
+    if (!colorName || !hexCode || !code) {
       return NextResponse.json(
-        { success: false, error: "Color name and hex code are required" },
+        { success: false, error: "Color name, hex code, and code are required" },
         { status: 400 }
       );
     }
@@ -113,23 +113,43 @@ export async function PUT(
       );
     }
 
+    // Check if color code already exists (excluding current color)
+    const codeExists = await prisma.color.findFirst({
+      where: {
+        code: code,
+        id: { not: colorId },
+      },
+    });
+
+    if (codeExists) {
+      return NextResponse.json(
+        { success: false, error: "Color code already exists" },
+        { status: 400 }
+      );
+    }
+
     const updatedColor = await prisma.color.update({
       where: { id: colorId },
       data: {
         name: colorName,
         hexCode: hexCode,
-        code: code || existingColor.code,
+        code: code,
       },
     });
 
     return NextResponse.json({
       success: true,
-      data: updatedColor,
+      data: {
+        id: updatedColor.id,
+        code: updatedColor.code,
+        colorName: updatedColor.name,
+        hexCode: updatedColor.hexCode,
+      },
     });
   } catch (error) {
     console.error("Error updating color:", error);
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
+      { success: false, error: "Failed to update color" },
       { status: 500 }
     );
   }

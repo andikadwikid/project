@@ -21,7 +21,7 @@ export async function GET() {
       data: colors.map((color) => ({
         id: color.id,
         code: color.code,
-        colorName: color.name,
+        name: color.name,
         hexCode: color.hexCode || "#000000",
         productCount: color._count.productColors,
       })),
@@ -41,13 +41,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { colorName, hexCode } = body;
+    const { colorName, hexCode, code } = body;
 
-    if (!colorName || !hexCode) {
+    if (!colorName || !hexCode || !code) {
       return NextResponse.json(
         {
           success: false,
-          error: "Color name and hex code are required",
+          error: "Color name, hex code, and code are required",
         },
         { status: 400 }
       );
@@ -66,11 +66,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if color name already exists
-    const existingColor = await prisma.color.findFirst({
+    const existingColorName = await prisma.color.findFirst({
       where: { name: colorName },
     });
 
-    if (existingColor) {
+    if (existingColorName) {
       return NextResponse.json(
         {
           success: false,
@@ -80,9 +80,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate color code
-    // const colorCount = await prisma.color.count()
-    const code = `${colorName.toUpperCase().replace(/\s+/g, "_")}`;
+    // Check if color code already exists
+    const existingColorCode = await prisma.color.findFirst({
+      where: { code },
+    });
+
+    if (existingColorCode) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Color code already exists",
+        },
+        { status: 400 }
+      );
+    }
 
     // Create new color in master table
     const color = await prisma.color.create({
