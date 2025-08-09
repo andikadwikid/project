@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, Heart, Share2, ShoppingBag, Plus, Minus, Star, Truck, Shield, RotateCcw, Ruler } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, ShoppingBag, Plus, Minus, Star, Truck, Shield, RotateCcw, Ruler, ChevronLeft, ChevronRight, Expand, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +27,7 @@ const ProductDetailPage = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -87,6 +88,20 @@ const ProductDetailPage = () => {
     return colorImages.length > 0 ? colorImages : product.images;
   };
 
+  const handlePrevImage = () => {
+    const filteredImages = getFilteredImages();
+    setSelectedImageIndex(prev => 
+      prev === 0 ? filteredImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleNextImage = () => {
+    const filteredImages = getFilteredImages();
+    setSelectedImageIndex(prev => 
+      prev === filteredImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
@@ -127,7 +142,8 @@ const ProductDetailPage = () => {
   }
 
   const filteredImages = getFilteredImages();
-  const currentImage = filteredImages[selectedImageIndex] || { imageUrl: product.image };
+  const currentImageObj = filteredImages[selectedImageIndex] || filteredImages[0];
+  const currentImage = currentImageObj?.imageUrl || product?.image || '/images/placeholder.svg';
 
   return (
     <div className="min-h-screen bg-gray-50" ref={heroRef}>
@@ -164,20 +180,54 @@ const ProductDetailPage = () => {
           {/* Product Images */}
           <div ref={imageRef} className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm">
+            <div className="relative aspect-square bg-white rounded-lg overflow-hidden shadow-sm group">
               <Image
-                src={currentImage.imageUrl}
+                src={currentImage}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-cover cursor-pointer transition-transform hover:scale-105"
+                onClick={() => setIsGalleryOpen(true)}
                 onError={(e) => {
                   e.currentTarget.src = '/images/hero-shoes.svg';
                 }}
               />
+              
+              {/* Navigation Arrows */}
+              {filteredImages.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <ChevronRight className="h-5 w-5 text-gray-700" />
+                  </button>
+                </>
+              )}
+              
+              {/* Expand Button */}
+              <button
+                onClick={() => setIsGalleryOpen(true)}
+                className="absolute top-2 right-2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Expand className="h-4 w-4 text-gray-700" />
+              </button>
+              
+              {/* Image Counter */}
+              {filteredImages.length > 1 && (
+                <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-sm">
+                  {selectedImageIndex + 1} / {filteredImages.length}
+                </div>
+              )}
             </div>
 
             {/* Thumbnail Images */}
-            {filteredImages.length > 1 && (
+            {filteredImages.length > 0 && (
               <div className="grid grid-cols-4 gap-2">
                 {filteredImages.map((image, index) => (
                   <button
@@ -450,6 +500,87 @@ const ProductDetailPage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Fullscreen Gallery Modal */}
+      <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
+        <DialogContent className="max-w-6xl max-h-[90vh] p-0 bg-black">
+          <div className="relative w-full h-[80vh]">
+            {/* Close Button */}
+            <button
+              onClick={() => setIsGalleryOpen(false)}
+              className="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/30 rounded-full p-2 text-white transition-colors"
+            >
+              <X className="h-6 w-6" />
+            </button>
+
+            {/* Main Gallery Image */}
+            <div className="relative w-full h-full">
+              <Image
+                src={currentImage}
+                alt={product.name}
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = '/images/hero-shoes.svg';
+                }}
+              />
+            </div>
+
+            {/* Navigation Arrows */}
+            {filteredImages.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 text-white transition-colors"
+                >
+                  <ChevronLeft className="h-8 w-8" />
+                </button>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-3 text-white transition-colors"
+                >
+                  <ChevronRight className="h-8 w-8" />
+                </button>
+              </>
+            )}
+
+            {/* Image Counter */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full">
+              {selectedImageIndex + 1} / {filteredImages.length}
+            </div>
+          </div>
+
+          {/* Thumbnail Strip */}
+          {filteredImages.length > 1 && (
+            <div className="p-4 bg-gray-900">
+              <div className="flex gap-2 justify-center overflow-x-auto">
+                {filteredImages.map((image, index) => (
+                  <button
+                    key={image.id}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                      selectedImageIndex === index 
+                        ? 'border-pink-500' 
+                        : 'border-gray-600 hover:border-gray-400'
+                    }`}
+                  >
+                    <Image
+                      src={image.imageUrl}
+                      alt={`${product.name} ${index + 1}`}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/hero-shoes.svg';
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
