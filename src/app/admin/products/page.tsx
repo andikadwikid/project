@@ -19,7 +19,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Edit, Trash2, Search, ArrowLeft } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Product } from '@/types/product'
@@ -43,6 +43,19 @@ const AdminProducts = () => {
     const [totalPages, setTotalPages] = useState(1)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [productToDelete, setProductToDelete] = useState<Product | null>(null)
+    const [importDialogOpen, setImportDialogOpen] = useState(false)
+    const [importFile, setImportFile] = useState<File | null>(null)
+    const [importing, setImporting] = useState(false)
+    const [importResult, setImportResult] = useState<{
+        success: boolean;
+        data?: {
+            totalRows: number;
+            successCount: number;
+            failedCount: number;
+            errors: string[];
+        };
+        error?: string;
+    } | null>(null)
 
     const fetchProducts = async (page = 1, search = '') => {
         try {
@@ -89,6 +102,60 @@ const AdminProducts = () => {
         fetchProducts(1, searchTerm)
     }
 
+    const handleImport = async () => {
+        if (!importFile) return
+
+        try {
+            setImporting(true)
+            const formData = new FormData()
+            formData.append('file', importFile)
+
+            const response = await fetch('/api/products/import', {
+                method: 'POST',
+                body: formData
+            })
+
+            const result = await response.json()
+            setImportResult(result)
+
+            if (result.success) {
+                await fetchProducts(currentPage, searchTerm)
+            }
+        } catch (error) {
+            console.error('Error importing products:', error)
+            setImportResult({
+                success: false,
+                error: 'Failed to import products'
+            })
+        } finally {
+            setImporting(false)
+        }
+    }
+
+    const resetImportDialog = () => {
+        setImportDialogOpen(false)
+        setImportFile(null)
+        setImportResult(null)
+        setImporting(false)
+    }
+
+    const downloadTemplate = async () => {
+        try {
+            const response = await fetch('/api/products/template')
+            const blob = await response.blob()
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'product_import_template.xlsx'
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+            window.URL.revokeObjectURL(url)
+        } catch (error) {
+            console.error('Error downloading template:', error)
+        }
+    }
+
     useEffect(() => {
         fetchProducts()
     }, [])
@@ -115,12 +182,21 @@ const AdminProducts = () => {
                                 <p className="text-gray-600 mt-1">Manage your product catalog</p>
                             </div>
                         </div>
-                        <Link href="/admin/products/new">
-                            <Button>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Product
+                        <div className="flex space-x-2">
+                            <Button 
+                                variant="outline" 
+                                onClick={() => setImportDialogOpen(true)}
+                            >
+                                <Upload className="h-4 w-4 mr-2" />
+                                Import Excel
                             </Button>
-                        </Link>
+                            <Link href="/admin/products/new">
+                                <Button>
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Product
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -286,6 +362,120 @@ const AdminProducts = () => {
                         >
                             Delete
                         </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Import Dialog */}
+            <Dialog open={importDialogOpen} onOpenChange={resetImportDialog}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Import Products from Excel</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        {!importResult ? (
+                            <>
+                                <div className="space-y-2">
+                                    <p className="text-sm text-gray-600">
+                                        Upload an Excel file to import products. Make sure your Excel file follows the required format.
+                                    </p>
+                                    <Button 
+                                        variant="outline" 
+                                        size="sm" 
+                                        onClick={downloadTemplate}
+                                        className="w-full"
+                                    >
+                                        <Download className="h-4 w-4 mr-2" />
+                                        Download Template
+                                    </Button>
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Select Excel File</label>
+                                    <Input
+                                        type="file"
+                                        accept=".xlsx,.xls"
+                                        onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                                    />
+                                </div>
+                                
+                                <div className="flex justify-end space-x-2">
+                                    <Button variant="outline" onClick={resetImportDialog}>
+                                        Cancel
+                                    </Button>
+                                    <Button 
+                                        onClick={handleImport} 
+                                        disabled={!importFile || importing}
+                                    >
+                                        {importing ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                                Importing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Upload className="h-4 w-4 mr-2" />
+                                                Import
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="space-y-3">
+                                    <h3 className="font-medium">Import Results</h3>
+                                    
+                                    {importResult.success ? (
+                                        <div className="space-y-2">
+                                            <div className="bg-green-50 border border-green-200 rounded-md p-3">
+                                                <p className="text-green-800 text-sm">
+                                                    Import completed successfully!
+                                                </p>
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <span className="font-medium">Total Rows:</span>
+                                                    <span className="ml-2">{importResult.data?.totalRows || 0}</span>
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium">Success:</span>
+                                                    <span className="ml-2 text-green-600">{importResult.data?.successCount || 0}</span>
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium">Failed:</span>
+                                                    <span className="ml-2 text-red-600">{importResult.data?.failedCount || 0}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            {importResult.data?.errors && importResult.data.errors.length > 0 && (
+                                                <div className="space-y-2">
+                                                    <p className="font-medium text-sm">Errors:</p>
+                                                    <div className="bg-red-50 border border-red-200 rounded-md p-3 max-h-32 overflow-y-auto">
+                                                        {importResult.data.errors.map((error: string, index: number) => (
+                                                            <p key={index} className="text-red-800 text-xs">{error}</p>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                                            <p className="text-red-800 text-sm">
+                                                {importResult.error || 'Import failed'}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                <div className="flex justify-end">
+                                    <Button onClick={resetImportDialog}>
+                                        Close
+                                    </Button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </DialogContent>
             </Dialog>

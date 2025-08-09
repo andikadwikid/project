@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Product } from '@/types/product'
 
 interface UseProductResult {
@@ -13,7 +13,7 @@ export const useProduct = (id: string | number): UseProductResult => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -36,13 +36,13 @@ export const useProduct = (id: string | number): UseProductResult => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
 
   useEffect(() => {
     if (id) {
       fetchProduct()
     }
-  }, [id])
+  }, [id, fetchProduct])
 
   const refetch = () => {
     if (id) {
