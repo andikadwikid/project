@@ -232,6 +232,7 @@ const AdminProducts = () => {
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Image</TableHead>
+                                            <TableHead>Code</TableHead>
                                             <TableHead>Name</TableHead>
                                             <TableHead>Category</TableHead>
                                             <TableHead>Brand</TableHead>
@@ -256,6 +257,9 @@ const AdminProducts = () => {
                                                     //     target.src = '/images/placeholder.svg'
                                                     // }}
                                                     />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge variant="outline" className="font-mono text-xs">{product.code}</Badge>
                                                 </TableCell>
                                                 <TableCell className="font-medium">{product.name}</TableCell>
                                                 <TableCell>
