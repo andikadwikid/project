@@ -9,6 +9,9 @@ import { useCategories } from '@/hooks/useCategories'
 import { useBrands } from '@/hooks/useBrands'
 import { useColors } from '@/hooks/useColors'
 import { useSizes } from '@/hooks/useSizes'
+import { useSizeTemplates } from '@/hooks/useSizeTemplates'
+import { usePromotions } from '@/hooks/usePromotions'
+import { usePromoBanners } from '@/hooks/usePromoBanners'
 
 const AdminDashboardClient = () => {
   const { products, loading: productsLoading, error: productsError } = useProducts({ limit: 5 })
@@ -16,6 +19,9 @@ const AdminDashboardClient = () => {
   const { brands, loading: brandsLoading, error: brandsError } = useBrands()
   const { colors, loading: colorsLoading, error: colorsError } = useColors()
   const { sizes, loading: sizesLoading, error: sizesError } = useSizes()
+  const { sizeTemplates, loading: sizeTemplatesLoading, error: sizeTemplatesError } = useSizeTemplates()
+  const { promotions, loading: promotionsLoading, error: promotionsError } = usePromotions()
+  const { promoBanners, loading: promoBannersLoading, error: promoBannersError } = usePromoBanners()
 
   // Loading states are available but not used in this component
 
@@ -65,7 +71,7 @@ const AdminDashboardClient = () => {
       description: 'Manage size templates',
       icon: Layout,
       href: '/admin/size-templates',
-      count: '0',
+      count: (sizeTemplates || []).length.toString(),
       color: 'bg-teal-500',
     },
     {
@@ -73,7 +79,7 @@ const AdminDashboardClient = () => {
       description: 'Manage promotions and discounts',
       icon: Percent,
       href: '/admin/promotions',
-      count: '0',
+      count: (promotions || []).length.toString(),
       color: 'bg-yellow-500',
     },
     {
@@ -81,7 +87,7 @@ const AdminDashboardClient = () => {
       description: 'Manage promotional banners',
       icon: Layout,
       href: '/admin/promo-banners',
-      count: '0',
+      count: (promoBanners || []).length.toString(),
       color: 'bg-indigo-500',
     },
     {
@@ -94,7 +100,7 @@ const AdminDashboardClient = () => {
     },
   ]
 
-  if (productsLoading || categoriesLoading || brandsLoading || colorsLoading || sizesLoading) {
+  if (productsLoading || categoriesLoading || brandsLoading || colorsLoading || sizesLoading || sizeTemplatesLoading || promotionsLoading || promoBannersLoading) {
     return (
       <div className="container mx-auto p-6">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
@@ -106,14 +112,14 @@ const AdminDashboardClient = () => {
     )
   }
 
-  if (productsError || categoriesError || brandsError || colorsError || sizesError) {
+  if (productsError || categoriesError || brandsError || colorsError || sizesError || sizeTemplatesError || promotionsError || promoBannersError) {
     return (
       <div className="container mx-auto p-6">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
         <div className="text-center py-8">
           <p className="text-red-600">Error loading dashboard data</p>
           <p className="text-sm text-gray-600 mt-2">
-            {productsError || categoriesError || brandsError || colorsError || sizesError}
+            {productsError || categoriesError || brandsError || colorsError || sizesError || sizeTemplatesError || promotionsError || promoBannersError}
           </p>
         </div>
       </div>

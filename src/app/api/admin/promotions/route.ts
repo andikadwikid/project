@@ -16,7 +16,10 @@ export async function GET() {
             }
         })
 
-        return NextResponse.json(promotions)
+        return NextResponse.json({
+            success: true,
+            data: promotions
+        })
     } catch (error) {
         console.error('Error fetching promotions:', error)
         return NextResponse.json(
