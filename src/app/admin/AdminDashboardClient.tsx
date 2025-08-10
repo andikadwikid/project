@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Package, Tag, Palette, Ruler, BarChart3, Users } from 'lucide-react'
+import { Package, Tag, Palette, Ruler, BarChart3, Users, Layout } from 'lucide-react'
 import { useProducts } from '@/hooks/useProducts'
 import { useCategories } from '@/hooks/useCategories'
 import { useBrands } from '@/hooks/useBrands'
@@ -57,6 +57,14 @@ const AdminDashboardClient = () => {
       href: '/admin/sizes',
       count: sizes.length.toString(),
       color: 'bg-orange-500',
+    },
+    {
+      title: 'Size Templates',
+      description: 'Manage size templates',
+      icon: Layout,
+      href: '/admin/size-templates',
+      count: '0',
+      color: 'bg-teal-500',
     },
     {
       title: 'Users',

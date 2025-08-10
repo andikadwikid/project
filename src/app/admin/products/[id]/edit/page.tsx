@@ -48,6 +48,23 @@ interface Size {
   pivotId?: number
 }
 
+interface SizeTemplateItem {
+  id: number
+  sizeId: number
+  cmValue: number
+  size: {
+    id: number
+    sizeLabel: string
+  }
+}
+
+interface SizeTemplate {
+  id: number
+  name: string
+  description?: string
+  templateSizes: SizeTemplateItem[]
+}
+
 interface ProductImage {
   id: number
   imageUrl: string
@@ -82,6 +99,8 @@ const EditProduct = () => {
   const [brands, setBrands] = useState<Brand[]>([])
   const [availableColors, setAvailableColors] = useState<Color[]>([])
   const [availableSizes, setAvailableSizes] = useState<Size[]>([])
+  const [sizeTemplates, setSizeTemplates] = useState<SizeTemplate[]>([])
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('')
   const [product, setProduct] = useState<ProductData | null>(null)
   
   const [formData, setFormData] = useState({
@@ -102,20 +121,22 @@ const EditProduct = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productRes, categoriesRes, brandsRes, colorsRes, sizesRes] = await Promise.all([
+        const [productRes, categoriesRes, brandsRes, colorsRes, sizesRes, templatesRes] = await Promise.all([
           fetch(`/api/products/${productId}`),
           fetch('/api/categories'),
           fetch('/api/brands'),
           fetch('/api/colors'),
-          fetch('/api/sizes')
+          fetch('/api/sizes'),
+          fetch('/api/size-templates')
         ])
 
-        const [productData, categoriesData, brandsData, colorsData, sizesData] = await Promise.all([
+        const [productData, categoriesData, brandsData, colorsData, sizesData, templatesData] = await Promise.all([
           productRes.json(),
           categoriesRes.json(),
           brandsRes.json(),
           colorsRes.json(),
-          sizesRes.json()
+          sizesRes.json(),
+          templatesRes.json()
         ])
 
         if (productData.success) {
@@ -138,6 +159,7 @@ const EditProduct = () => {
         if (brandsData.success) setBrands(brandsData.data)
         if (colorsData.success) setAvailableColors(colorsData.data)
         if (sizesData.success) setAvailableSizes(sizesData.data)
+        if (templatesData.success) setSizeTemplates(templatesData.data)
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -221,6 +243,27 @@ const EditProduct = () => {
       selectedSizes: prev.selectedSizes.map(s => 
         s.id === sizeId ? { ...s, cmValue: cmValue ? parseFloat(cmValue) : undefined } : s
       )
+    }))
+  }
+
+  const applyTemplate = (templateId: string) => {
+    if (!templateId || templateId === 'none') return
+    
+    const template = sizeTemplates.find(t => t.id.toString() === templateId)
+    if (!template) return
+
+    // Update selected sizes with template values
+    const updatedSizes = formData.selectedSizes.map(selectedSize => {
+      const templateItem = template.templateSizes.find(item => item.sizeId === selectedSize.id)
+      if (templateItem) {
+        return { ...selectedSize, cmValue: templateItem.cmValue }
+      }
+      return selectedSize
+    })
+
+    setFormData(prev => ({
+      ...prev,
+      selectedSizes: updatedSizes
     }))
   }
 
@@ -433,6 +476,39 @@ const EditProduct = () => {
                   )
                 })}
               </div>
+              
+              {/* Size Template Dropdown */}
+              {formData.selectedSizes.length > 0 && sizeTemplates.length > 0 && (
+                <div className="mt-6 space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Apply Size Template (Optional)</Label>
+                    <Select
+                      value={selectedTemplate}
+                      onValueChange={(value) => {
+                        setSelectedTemplate(value)
+                        applyTemplate(value)
+                      }}
+                    >
+                      <SelectTrigger className="w-full md:w-64">
+                        <SelectValue placeholder="Select a size template" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">No template</SelectItem>
+                        {sizeTemplates.map((template) => (
+                          <SelectItem key={template.id} value={template.id.toString()}>
+                            {template.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {selectedTemplate && (
+                      <p className="text-xs text-gray-500">
+                        Template applied! CM values have been updated for matching sizes.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
               
               {/* CM Value inputs for selected sizes */}
               {formData.selectedSizes.length > 0 && (

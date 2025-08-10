@@ -84,7 +84,8 @@ model Size {
   cmValue   Decimal?  @map("cm_value") @db.Decimal(4, 1)
   createdAt DateTime  @default(now()) @map("created_at")
   
-  products  ProductSizePivot[]
+  products      ProductSizePivot[]
+  templateItems SizeTemplateItem[]
 
   @@map("sizes")
 }
@@ -101,6 +102,32 @@ model ProductSizePivot {
 
   @@unique([productId, sizeId])
   @@map("product_size_pivot")
+}
+
+model SizeTemplate {
+  id          Int                    @id @default(autoincrement())
+  name        String                 @unique
+  description String?
+  isActive    Boolean                @default(true) @map("is_active")
+  createdAt   DateTime               @default(now()) @map("created_at")
+  
+  templateSizes SizeTemplateItem[]
+
+  @@map("size_templates")
+}
+
+model SizeTemplateItem {
+  id             Int          @id @default(autoincrement())
+  templateId     Int          @map("template_id")
+  sizeId         Int          @map("size_id")
+  cmValue        Decimal      @map("cm_value") @db.Decimal(4, 1)
+  sortOrder      Int          @default(0) @map("sort_order")
+  
+  template       SizeTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  size           Size         @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, sizeId])
+  @@map("size_template_items")
 }
 
 model ProductImage {
