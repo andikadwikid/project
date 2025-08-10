@@ -167,13 +167,13 @@ export async function GET(request: NextRequest) {
         colors: product.colors?.map((productColor: { color: { id: number; code: string; name: string; hexCode: string | null; }; }) => ({
           id: productColor.color.id,
           code: productColor.color.code,
-          name: productColor.color.name,
+          colorName: productColor.color.name,
           hexCode: productColor.color.hexCode
         })) || [],
         sizes: product.sizes?.map((sizePivot: { size: { id: number; code: string; sizeLabel: string; }; }) => ({
           id: sizePivot.size.id,
           code: sizePivot.size.code,
-          name: sizePivot.size.sizeLabel
+          sizeLabel: sizePivot.size.sizeLabel
         })) || [],
         images: product.images?.map((img: { imageUrl: string }) => img.imageUrl) || [],
         promotion: activePromotion ? {

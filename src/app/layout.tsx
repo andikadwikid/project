@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { CartProvider } from '@/contexts/CartContext';
-import CartDrawerWrapper from '@/components/cart/CartDrawerWrapper';
-import WhatsAppButton from '@/components/ui/WhatsAppButton';
-import { Toaster } from 'sonner';
+import ClientLayoutWrapper from '../components/layout/ClientLayoutWrapper';
 
 export const metadata: Metadata = {
   title: "Femme Steps - Premium Women's Shoes Collection",
@@ -31,6 +27,8 @@ export const metadata: Metadata = {
   themeColor: "#ec4899",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,14 +44,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <CartProvider>
-          <Header />
-          <main id="main-content" role="main">
+          <ClientLayoutWrapper>
             {children}
-          </main>
-          <Footer />
-          <CartDrawerWrapper />
-          <WhatsAppButton phoneNumber="6281234567890" message="Halo, saya tertarik dengan produk sepatu di Femme Steps" />
-          <Toaster position="top-right" richColors />
+          </ClientLayoutWrapper>
         </CartProvider>
       </body>
     </html>

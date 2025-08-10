@@ -12,6 +12,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useProduct } from '@/hooks/useProduct';
 import { ProductColor, ProductSize } from '@/types/product';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,6 +23,7 @@ const ProductDetailPage = () => {
   const productId = params.id as string;
 
   const { product, loading, error } = useProduct(productId);
+  const { addItem, openCart } = useCart();
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -66,16 +69,36 @@ const ProductDetailPage = () => {
   };
 
   const handleAddToCart = () => {
-    if (!selectedColor || !selectedSize) {
-      alert('Please select color and size');
+    if (!product) return;
+    
+    // Validation for products with colors
+    if (product.colors && product.colors.length > 0 && !selectedColor) {
+      toast.error('Please select a color');
       return;
     }
-    // Add to cart logic here
-    console.log('Added to cart:', {
-      productId: product?.id,
-      color: selectedColor?.code,
-      size: selectedSize?.code,
-      quantity
+
+    // Validation for products with sizes
+    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+      toast.error('Please select a size');
+      return;
+    }
+
+    // Add item to cart
+    addItem({
+      product,
+      quantity,
+      selectedColor: selectedColor || undefined,
+      selectedSize: selectedSize || undefined,
+      price: product.price
+    });
+
+    // Show success toast
+    toast.success(`${product.name} added to cart!`, {
+      description: `${quantity} item(s) added to your shopping cart.`,
+      action: {
+        label: 'View Cart',
+        onClick: () => openCart()
+      }
     });
   };
 
