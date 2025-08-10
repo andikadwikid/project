@@ -103,33 +103,33 @@ const ProductCard = ({ product }: ProductCardProps) => {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
 
-          {/* Badges */}
-          <div className="absolute top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 md:gap-2">
-            {product.isNew && (
-              <Badge className="bg-pink-500 hover:bg-pink-600 text-white text-xs">
-                New
-              </Badge>
-            )}
-            {product.isSale && (
-              <Badge className="bg-red-500 hover:bg-red-600 text-white text-xs">
-                Sale
-              </Badge>
-            )}
-          </div>
+            {/* Badges */}
+            <div className="absolute top-2 left-2 md:top-3 md:left-3 flex flex-col gap-1 md:gap-2">
+              {product.isNew && (
+                <Badge className="bg-pink-500 hover:bg-pink-600 text-white text-xs">
+                  New
+                </Badge>
+              )}
+              {product.isSale && (
+                <Badge className="bg-red-500 hover:bg-red-600 text-white text-xs">
+                  Sale
+                </Badge>
+              )}
+            </div>
 
-          {/* Wishlist Button - Hidden on mobile */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden md:block absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-600 hover:text-pink-600 opacity-0 group-hover:opacity-100 transition-all duration-300"
-          >
-            <Heart className="h-4 w-4" />
-          </Button>
+            {/* Wishlist Button - Hidden on mobile */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden md:block absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-600 hover:text-pink-600 opacity-0 group-hover:opacity-100 transition-all duration-300"
+            >
+              <Heart className="h-4 w-4" />
+            </Button>
 
             {/* Quick Add Button - Hidden on mobile */}
             <Button
               size="sm"
-              className="flex absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+              className="flex cursor-pointer absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
               onClick={handleAddToCart}
             >
               <ShoppingBag className="h-4 w-4 mr-2" />

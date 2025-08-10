@@ -5,10 +5,10 @@ import { MessageCircle } from 'lucide-react';
 
 import { WhatsAppButtonProps } from '@/types/components';
 
-const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ 
-  phoneNumber, 
-  message = 'Halo, saya tertarik dengan produk Anda', 
-  className = '' 
+const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
+  phoneNumber,
+  message = 'Halo, saya tertarik dengan produk Anda',
+  className = ''
 }) => {
   const handleWhatsAppClick = () => {
     const encodedMessage = encodeURIComponent(message);
@@ -19,11 +19,11 @@ const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   return (
     <button
       onClick={handleWhatsAppClick}
-      className={`fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 group ${className}`}
+      className={`fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 cursor-pointer text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 group ${className}`}
       aria-label="Chat via WhatsApp"
     >
       <MessageCircle size={24} className="group-hover:animate-pulse" />
-      
+
       {/* Tooltip */}
       <div className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
         Chat via WhatsApp

@@ -21,7 +21,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download, CheckCircle } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download, CheckCircle, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { AdminProductsResponse, AdminProductData } from '@/types/admin'
@@ -347,9 +347,9 @@ const AdminProducts = () => {
                                                                 setProductToDelete(product)
                                                                 setDeleteDialogOpen(true)
                                                             }}
-                                                            className="text-red-600 hover:text-red-700"
+                                                            className="text-orange-600 hover:text-orange-700"
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <EyeOff className="h-4 w-4" />
                                                         </Button>
                                                     </div>
                                                 </TableCell>
@@ -390,9 +390,9 @@ const AdminProducts = () => {
             <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete Product</DialogTitle>
+                        <DialogTitle>Deactivate Product</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete &ldquo;{productToDelete?.name}&rdquo;? This action will deactivate the product and it can be reactivated later.
+                            Are you sure you want to deactivate &ldquo;{productToDelete?.name}&rdquo;? This action will deactivate the product and it can be reactivated later.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -403,8 +403,8 @@ const AdminProducts = () => {
                             variant="destructive"
                             onClick={() => productToDelete && handleDelete(productToDelete)}
                         >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete Product
+                            <EyeOff className="h-4 w-4 mr-2" />
+                            Deactivate Product
                         </Button>
                     </DialogFooter>
                 </DialogContent>

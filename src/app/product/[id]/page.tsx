@@ -90,14 +90,14 @@ const ProductDetailPage = () => {
 
   const handlePrevImage = () => {
     const filteredImages = getFilteredImages();
-    setSelectedImageIndex(prev => 
+    setSelectedImageIndex(prev =>
       prev === 0 ? filteredImages.length - 1 : prev - 1
     );
   };
 
   const handleNextImage = () => {
     const filteredImages = getFilteredImages();
-    setSelectedImageIndex(prev => 
+    setSelectedImageIndex(prev =>
       prev === filteredImages.length - 1 ? 0 : prev + 1
     );
   };
@@ -191,7 +191,7 @@ const ProductDetailPage = () => {
                   e.currentTarget.src = '/images/hero-shoes.svg';
                 }}
               />
-              
+
               {/* Navigation Arrows */}
               {filteredImages.length > 1 && (
                 <>
@@ -209,7 +209,7 @@ const ProductDetailPage = () => {
                   </button>
                 </>
               )}
-              
+
               {/* Expand Button */}
               <button
                 onClick={() => setIsGalleryOpen(true)}
@@ -217,7 +217,7 @@ const ProductDetailPage = () => {
               >
                 <Expand className="h-4 w-4 text-gray-700" />
               </button>
-              
+
               {/* Image Counter */}
               {filteredImages.length > 1 && (
                 <div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-sm">
@@ -270,8 +270,8 @@ const ProductDetailPage = () => {
                     <Star
                       key={i}
                       className={`h-4 w-4 ${i < Math.floor(product.rating || 0)
-                          ? 'text-yellow-400 fill-yellow-400'
-                          : 'text-gray-300'
+                        ? 'text-yellow-400 fill-yellow-400'
+                        : 'text-gray-300'
                         }`}
                     />
                   ))}
@@ -307,8 +307,8 @@ const ProductDetailPage = () => {
                         setSelectedImageIndex(0);
                       }}
                       className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor?.code === color.code
-                          ? 'border-gray-900 scale-110'
-                          : 'border-gray-300 hover:border-gray-400'
+                        ? 'border-gray-900 scale-110'
+                        : 'border-gray-300 hover:border-gray-400'
                         }`}
                       style={{ backgroundColor: color.hexCode }}
                       title={color.colorName}
@@ -410,8 +410,8 @@ const ProductDetailPage = () => {
                       key={size.id}
                       onClick={() => setSelectedSize(size)}
                       className={`py-2 px-3 text-sm border rounded-md transition-colors ${selectedSize?.code === size.code
-                          ? 'border-pink-500 bg-pink-50 text-pink-700'
-                          : 'border-gray-300 hover:border-gray-400'
+                        ? 'border-pink-500 bg-pink-50 text-pink-700'
+                        : 'border-gray-300 hover:border-gray-400'
                         }`}
                     >
                       {size.sizeLabel}
@@ -448,7 +448,7 @@ const ProductDetailPage = () => {
             <div className="space-y-3">
               <Button
                 onClick={handleAddToCart}
-                className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3"
+                className="w-full cursor-pointer bg-pink-600 hover:bg-pink-700 text-white py-3"
                 size="lg"
               >
                 <ShoppingBag className="h-5 w-5 mr-2" />
@@ -558,11 +558,10 @@ const ProductDetailPage = () => {
                   <button
                     key={image.id}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImageIndex === index 
-                        ? 'border-pink-500' 
+                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${selectedImageIndex === index
+                        ? 'border-pink-500'
                         : 'border-gray-600 hover:border-gray-400'
-                    }`}
+                      }`}
                   >
                     <Image
                       src={image.imageUrl}
