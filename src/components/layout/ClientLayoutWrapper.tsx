@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawerWrapper from '@/components/cart/CartDrawerWrapper';
@@ -14,6 +14,21 @@ interface ClientLayoutWrapperProps {
 
 export default function ClientLayoutWrapper({ children }: ClientLayoutWrapperProps) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <main id="main-content" role="main" className="min-h-screen bg-gray-50">
+        {children}
+      </main>
+    );
+  }
+  
   const isAdminPage = pathname?.startsWith('/admin');
 
   if (isAdminPage) {

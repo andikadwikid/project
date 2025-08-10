@@ -59,11 +59,16 @@ export default function PromotionsPage() {
             setIsLoading(true)
             const response = await fetch('/api/admin/promotions')
             if (response.ok) {
-                const data = await response.json()
-                setPromotions(data)
+                const result = await response.json()
+                // Handle both direct array and wrapped response
+                const data = result.data || result
+                setPromotions(Array.isArray(data) ? data : [])
+            } else {
+                setPromotions([])
             }
         } catch (error) {
             console.error('Error fetching promotions:', error)
+            setPromotions([])
         } finally {
             setIsLoading(false)
         }
@@ -109,10 +114,10 @@ export default function PromotionsPage() {
         }
     }
 
-    const filteredPromotions = promotions.filter(promotion =>
+    const filteredPromotions = Array.isArray(promotions) ? promotions.filter(promotion =>
         promotion.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         promotion.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    ) : []
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('id-ID')
