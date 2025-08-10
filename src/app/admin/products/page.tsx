@@ -16,10 +16,12 @@ import {
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { AdminProductsResponse, AdminProductData } from '@/types/admin'
@@ -31,10 +33,13 @@ const AdminProducts = () => {
     const [products, setProducts] = useState<HookProduct[]>([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
+    const [statusFilter, setStatusFilter] = useState('all') // 'all', 'active', 'inactive'
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [productToDelete, setProductToDelete] = useState<HookProduct | null>(null)
+    const [activateDialogOpen, setActivateDialogOpen] = useState(false)
+    const [productToActivate, setProductToActivate] = useState<HookProduct | null>(null)
     const [importDialogOpen, setImportDialogOpen] = useState(false)
     const [excelFile, setExcelFile] = useState<File | null>(null)
     const [zipFile, setZipFile] = useState<File | null>(null)
@@ -50,16 +55,17 @@ const AdminProducts = () => {
         error?: string;
     } | null>(null)
 
-    const fetchProducts = async (page = 1, search = '') => {
+    const fetchProducts = async (page = 1, search = '', status = 'all') => {
         try {
             setLoading(true)
             const params = new URLSearchParams({
                 page: page.toString(),
                 limit: '10',
-                ...(search && { search })
+                ...(search && { search }),
+                ...(status && { status })
             })
 
-            const response = await fetch(`/api/products?${params}`)
+            const response = await fetch(`/api/admin/products?${params}`)
             const data: ProductsResponse = await response.json()
 
             if (data.success) {
@@ -80,12 +86,35 @@ const AdminProducts = () => {
             })
 
             if (response.ok) {
-                await fetchProducts(currentPage, searchTerm)
+                await fetchProducts(currentPage, searchTerm, statusFilter)
                 setDeleteDialogOpen(false)
                 setProductToDelete(null)
             }
         } catch (error) {
             console.error('Error deleting product:', error)
+        }
+    }
+
+    const handleActivate = (product: HookProduct) => {
+        setProductToActivate(product)
+        setActivateDialogOpen(true)
+    }
+
+    const confirmActivate = async () => {
+        if (!productToActivate) return
+
+        try {
+            const response = await fetch(`/api/admin/products/${productToActivate.id}/activate`, {
+                method: 'PATCH'
+            })
+
+            if (response.ok) {
+                await fetchProducts(currentPage, searchTerm, statusFilter)
+                setActivateDialogOpen(false)
+                setProductToActivate(null)
+            }
+        } catch (error) {
+            console.error('Error activating product:', error)
         }
     }
 
@@ -117,7 +146,7 @@ const AdminProducts = () => {
             setImportResult(result)
 
             if (result.success) {
-                await fetchProducts(currentPage, searchTerm)
+                await fetchProducts(currentPage, searchTerm, statusFilter)
             }
         } catch (error) {
             console.error('Error importing products:', error)
@@ -151,8 +180,8 @@ const AdminProducts = () => {
     }, [])
 
     useEffect(() => {
-        fetchProducts(currentPage, searchTerm)
-    }, [currentPage, searchTerm])
+        fetchProducts(currentPage, searchTerm, statusFilter)
+    }, [currentPage, searchTerm, statusFilter])
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -197,17 +226,28 @@ const AdminProducts = () => {
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle>Product List</CardTitle>
-                            <form onSubmit={handleSearch} className="flex space-x-2">
-                                <Input
-                                    placeholder="Search products..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-64"
-                                />
-                                <Button type="submit" variant="outline">
-                                    <Search className="h-4 w-4" />
-                                </Button>
-                            </form>
+                            <div className="flex space-x-2">
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="all">All Products</option>
+                                    <option value="active">Active Only</option>
+                                    <option value="inactive">Inactive Only</option>
+                                </select>
+                                <form onSubmit={handleSearch} className="flex space-x-2">
+                                    <Input
+                                        placeholder="Search products..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-64"
+                                    />
+                                    <Button type="submit" variant="outline">
+                                        <Search className="h-4 w-4" />
+                                    </Button>
+                                </form>
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -227,6 +267,7 @@ const AdminProducts = () => {
                                             <TableHead>Category</TableHead>
                                             <TableHead>Brand</TableHead>
                                             <TableHead>Price</TableHead>
+                                            <TableHead>Status</TableHead>
                                             <TableHead>Colors</TableHead>
                                             <TableHead>Sizes</TableHead>
                                             <TableHead>Actions</TableHead>
@@ -253,6 +294,11 @@ const AdminProducts = () => {
                                                 </TableCell>
                                                 <TableCell>{product.brand.name}</TableCell>
                                                 <TableCell>Rp {product.price.toLocaleString('id-ID')}</TableCell>
+                                                <TableCell>
+                                                    <Badge variant={product.isActive ? "default" : "secondary"}>
+                                                        {product.isActive ? "Active" : "Inactive"}
+                                                    </Badge>
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-wrap gap-1">
                                                         {(product.colors || []).slice(0, 3).map((color) => (
@@ -284,6 +330,16 @@ const AdminProducts = () => {
                                                                 <Edit className="h-4 w-4" />
                                                             </Button>
                                                         </Link>
+                                                        {!product.isActive && (
+                                                             <Button
+                                                                 variant="outline"
+                                                                 size="sm"
+                                                                 onClick={() => handleActivate(product)}
+                                                                 className="text-green-600 hover:text-green-700"
+                                                             >
+                                                                 <CheckCircle className="h-4 w-4" />
+                                                             </Button>
+                                                         )}
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
@@ -335,11 +391,11 @@ const AdminProducts = () => {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Delete Product</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete &ldquo;{productToDelete?.name}&rdquo;? This action will deactivate the product and it can be reactivated later.
+                        </DialogDescription>
                     </DialogHeader>
-                    <div className="py-4">
-                        <p>Are you sure you want to delete &ldquo;{productToDelete?.name}&rdquo;? This action cannot be undone.</p>
-                    </div>
-                    <div className="flex justify-end space-x-2">
+                    <DialogFooter>
                         <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
                             Cancel
                         </Button>
@@ -347,9 +403,31 @@ const AdminProducts = () => {
                             variant="destructive"
                             onClick={() => productToDelete && handleDelete(productToDelete)}
                         >
-                            Delete
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete Product
                         </Button>
-                    </div>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Activate Confirmation Dialog */}
+            <Dialog open={activateDialogOpen} onOpenChange={setActivateDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Activate Product</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to activate &ldquo;{productToActivate?.name}&rdquo;? This will make the product visible and available for purchase.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setActivateDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={confirmActivate}>
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Activate Product
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 

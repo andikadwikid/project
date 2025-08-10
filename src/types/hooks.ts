@@ -83,6 +83,7 @@ export interface HookProduct {
   category: HookCategory;
   brand: HookBrand;
   description?: string;
+  isActive?: boolean;
   isNew?: boolean;
   isSale?: boolean;
   rating?: number;
