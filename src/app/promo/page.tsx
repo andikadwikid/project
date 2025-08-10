@@ -124,16 +124,12 @@ const PromoPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Banner Carousel */}
-      <section className="bg-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
-            {bannersLoading ? (
-              <div className="flex items-center justify-center h-full bg-gray-200">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-              </div>
-            ) : (
-              promoBanners.map((banner, index) => (
+      {/* Hero Banner Carousel - Only show if there are banners */}
+      {!bannersLoading && promoBanners.length > 0 && (
+        <section className="bg-white py-8">
+          <div className="container mx-auto px-4">
+            <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
+              {promoBanners.map((banner, index) => (
                 <div
                   key={banner.id}
                   className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
@@ -161,111 +157,136 @@ const PromoPage = () => {
                     />
                   )}
                 </div>
-              ))
-            )}
+              ))}
 
-            {!bannersLoading && promoBanners.length > 1 && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentSlide((prev) => (prev - 1 + promoBanners.length) % promoBanners.length)}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentSlide((prev) => (prev + 1) % promoBanners.length)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </>
-            )}
+              {promoBanners.length > 1 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentSlide((prev) => (prev - 1 + promoBanners.length) % promoBanners.length)}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentSlide((prev) => (prev + 1) % promoBanners.length)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
 
-            {!bannersLoading && promoBanners.length > 0 && (
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4 text-white">
                   <h3 className="text-lg font-bold">{promoBanners[currentSlide]?.title}</h3>
                   <p className="text-sm opacity-90">{promoBanners[currentSlide]?.subtitle || promoBanners[currentSlide]?.description}</p>
                 </div>
               </div>
+            </div>
+
+            {promoBanners.length > 1 && (
+              <div className="flex justify-center space-x-2 mt-4">
+                {promoBanners.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      index === currentSlide ? 'bg-red-500' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
             )}
           </div>
+        </section>
+      )}
 
-          {!bannersLoading && promoBanners.length > 0 && (
-            <div className="flex justify-center space-x-2 mt-4">
-              {promoBanners.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentSlide ? 'bg-red-500' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Promo Stats */}
-      <section className="py-8 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Percent className="h-8 w-8 text-red-500 mr-2" />
-                <span className="text-3xl font-bold text-red-500">{promoProducts.length}</span>
+      {/* Loading state for banners */}
+      {bannersLoading && (
+        <section className="bg-white py-8">
+          <div className="container mx-auto px-4">
+            <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl">
+              <div className="flex items-center justify-center h-full bg-gray-200">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
               </div>
-              <p className="text-gray-600">Products on Sale</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Clock className="h-8 w-8 text-blue-500 mr-2" />
-                <span className="text-3xl font-bold text-blue-500">24</span>
-              </div>
-              <p className="text-gray-600">Hours Left</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Tag className="h-8 w-8 text-green-500 mr-2" />
-                <span className="text-3xl font-bold text-green-500">70%</span>
-              </div>
-              <p className="text-gray-600">Max Discount</p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Promo Stats - Only show if there are promo products */}
+      {promoProducts.length > 0 && (
+        <section className="py-8 bg-white border-b">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Percent className="h-8 w-8 text-red-500 mr-2" />
+                  <span className="text-3xl font-bold text-red-500">{promoProducts.length}</span>
+                </div>
+                <p className="text-gray-600">Products on Sale</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Clock className="h-8 w-8 text-blue-500 mr-2" />
+                  <span className="text-3xl font-bold text-blue-500">24</span>
+                </div>
+                <p className="text-gray-600">Hours Left</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Tag className="h-8 w-8 text-green-500 mr-2" />
+                  <span className="text-3xl font-bold text-green-500">70%</span>
+                </div>
+                <p className="text-gray-600">Max Discount</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Promo Products Section */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">🔥 Hot Deals</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Jangan lewatkan kesempatan emas ini! Produk-produk pilihan dengan diskon fantastis menunggu Anda.
-            </p>
-          </div>
-
           {promoProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {promoProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold mb-4">🔥 Hot Deals</h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Jangan lewatkan kesempatan emas ini! Produk-produk pilihan dengan diskon fantastis menunggu Anda.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {promoProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </>
           ) : (
-            <div className="text-center py-12">
+            <div className="text-center py-16">
               <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Tag className="h-16 w-16 text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">No Active Promotions</h3>
-              <p className="text-gray-600 mb-6">Saat ini belum ada produk yang sedang promo. Pantau terus untuk penawaran menarik!</p>
-              <Link href="/catalog">
-                <Button>Browse All Products</Button>
-              </Link>
+              <h2 className="text-2xl lg:text-3xl font-bold mb-4 text-gray-700">Tidak Ada Promosi Saat Ini</h2>
+              <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+                Maaf, saat ini belum ada produk yang sedang dalam masa promosi. Silakan kembali lagi nanti untuk penawaran menarik!
+              </p>
+              <div className="space-y-4">
+                <Link href="/catalog">
+                  <Button size="lg" className="mr-4">
+                    Lihat Semua Produk
+                  </Button>
+                </Link>
+                <Link href="/">
+                  <Button variant="outline" size="lg">
+                    Kembali ke Beranda
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
         </div>
@@ -274,18 +295,23 @@ const PromoPage = () => {
       {/* Call to Action */}
       <section className="py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">Don&apos;t Miss Out!</h2>
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+            {promoProducts.length > 0 ? "Jangan Sampai Terlewat!" : "Dapatkan Notifikasi Promosi!"}
+          </h2>
           <p className="text-lg mb-8 opacity-90">
-            Subscribe to our newsletter and be the first to know about exclusive deals and promotions.
+            {promoProducts.length > 0
+              ? "Berlangganan newsletter kami dan jadilah yang pertama tahu tentang penawaran eksklusif dan promosi menarik."
+              : "Berlangganan newsletter kami agar tidak ketinggalan informasi promosi dan penawaran spesial di masa mendatang."
+            }
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
             />
             <Button className="bg-white text-purple-600 hover:bg-gray-100">
-              Subscribe
+              Berlangganan
             </Button>
           </div>
         </div>
