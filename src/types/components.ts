@@ -1,5 +1,5 @@
 // Types and interfaces for React components
-import { Product, ProductColor, ProductSize } from './product';
+import { ProductColor, ProductSize } from './product';
 import { HookProduct } from './hooks';
 
 // Cart related interfaces

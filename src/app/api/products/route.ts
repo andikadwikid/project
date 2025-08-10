@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    // Get products with relations
+    // Get products with relations including active promotions
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
@@ -88,6 +88,18 @@ export async function GET(request: NextRequest) {
               { sortOrder: 'asc' },
             ],
           },
+          promoProducts: {
+            include: {
+              promotion: true,
+            },
+            where: {
+              promotion: {
+                isActive: true,
+                startDate: { lte: new Date() },
+                endDate: { gte: new Date() }
+              }
+            }
+          },
         },
         orderBy: {
           createdAt: 'desc',
@@ -99,37 +111,79 @@ export async function GET(request: NextRequest) {
     ])
 
     // Transform data to match frontend interface
-    const transformedProducts = products.map((product) => ({
-      id: product.id,
-      code: product.code,
-      name: product.name,
-      description: product.description,
-      brand: product.brand,
-      category: product.category,
-      price: Number(product.price),
-      originalPrice: null, // You can add this field to schema if needed
-      image: product.images.find(img => img.isPrimary && !img.productColorId)?.imageUrl || 
-             product.images.find(img => img.isPrimary)?.imageUrl || 
-             `/images/products/product-${product.id}.jpg`, // Fallback image path
-      rating: 4.5, // You can add rating system later
-      reviews: 128, // You can add review system later
-      isNew: false, // You can add logic for new products
-      isSale: false, // You can add sale logic
-      colors: product.colors.map((productColor) => ({
-        id: productColor.color.id,
-        code: productColor.color.code,
-        colorName: productColor.color.name,
-        hexCode: productColor.color.hexCode || '#000000',
-        imageUrl: productColor.imageUrl,
-      })),
-      sizes: product.sizes.map((sizePivot) => ({
-        id: sizePivot.size.id,
-        code: sizePivot.size.code,
-        sizeLabel: sizePivot.size.sizeLabel,
-        cmValue: sizePivot.size.cmValue,
-      })),
-      images: product.images.map((img) => img.imageUrl),
-    }))
+    const transformedProducts = products.map((product: {
+      id: number;
+      code: string;
+      name: string;
+      description: string | null;
+      price: { toNumber(): number };
+      brand?: { id: number; name: string; };
+      brandId: number;
+      category?: { id: number; name: string; };
+      categoryId: number;
+      images?: { isPrimary: boolean; productColorId?: number | null; imageUrl: string; }[];
+      colors?: { color: { id: number; code: string; name: string; hexCode: string | null; }; }[];
+      sizes?: { size: { id: number; code: string; sizeLabel: string; }; }[];
+      promoProducts?: { promotion?: { id: number; title: string; discountType: string; discountValue: { toNumber(): number }; }; }[];
+    }) => {
+      // Calculate promo price and original price
+      let promoPrice = null;
+      const originalPrice = product.price.toNumber();
+      let isSale = false;
+      
+      const activePromotion = product.promoProducts?.find((pp: { promotion?: { id: number; title: string; discountType: string; discountValue: { toNumber(): number } } }) => pp.promotion)?.promotion;
+      
+      if (activePromotion) {
+        const basePrice = product.price.toNumber();
+        
+        if (activePromotion.discountType === 'percentage') {
+          const discountAmount = (basePrice * activePromotion.discountValue.toNumber()) / 100;
+          promoPrice = basePrice - discountAmount;
+        } else if (activePromotion.discountType === 'fixed') {
+          promoPrice = basePrice - activePromotion.discountValue.toNumber();
+        }
+        
+        // Ensure promo price is not negative
+        promoPrice = Math.max(0, promoPrice || 0);
+        isSale = true;
+      }
+      
+      return {
+        id: product.id,
+        code: product.code,
+        name: product.name,
+        description: product.description,
+        brand: product.brand || { id: product.brandId, name: 'Unknown Brand' },
+        category: product.category || { id: product.categoryId, name: 'Unknown Category' },
+        price: promoPrice || product.price.toNumber(),
+        originalPrice: originalPrice,
+        image: product.images?.find((img: { isPrimary: boolean; productColorId?: number | null; imageUrl: string }) => img.isPrimary && !img.productColorId)?.imageUrl || 
+               product.images?.find((img: { isPrimary: boolean; imageUrl: string }) => img.isPrimary)?.imageUrl || 
+               `/images/products/product-${product.id}.jpg`, // Fallback image path
+        rating: 4.5, // You can add rating system later
+        reviews: 128, // You can add review system later
+        isNew: false, // You can add logic for new products
+        isSale: isSale,
+        colors: product.colors?.map((productColor: { color: { id: number; code: string; name: string; hexCode: string | null; }; }) => ({
+          id: productColor.color.id,
+          code: productColor.color.code,
+          name: productColor.color.name,
+          hexCode: productColor.color.hexCode
+        })) || [],
+        sizes: product.sizes?.map((sizePivot: { size: { id: number; code: string; sizeLabel: string; }; }) => ({
+          id: sizePivot.size.id,
+          code: sizePivot.size.code,
+          name: sizePivot.size.sizeLabel
+        })) || [],
+        images: product.images?.map((img: { imageUrl: string }) => img.imageUrl) || [],
+        promotion: activePromotion ? {
+          id: activePromotion.id,
+          title: activePromotion.title,
+          discountType: activePromotion.discountType,
+          discountValue: activePromotion.discountValue.toNumber()
+        } : null
+      }
+    })
 
     return NextResponse.json({
       success: true,

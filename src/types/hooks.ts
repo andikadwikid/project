@@ -73,6 +73,13 @@ export interface UseProductsParams {
   limit?: number;
 }
 
+export interface HookPromotion {
+  id: number;
+  title: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+}
+
 export interface HookProduct {
   id: string | number;
   code: string;
@@ -91,6 +98,7 @@ export interface HookProduct {
   colors?: ProductColor[];
   sizes?: ProductSize[];
   images?: ProductImage[];
+  promotion?: HookPromotion | null;
 }
 
 export interface UseProductResult {

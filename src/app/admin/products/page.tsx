@@ -21,10 +21,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download, CheckCircle, EyeOff } from 'lucide-react'
+import { Plus, Edit, Search, ArrowLeft, Upload, Download, CheckCircle, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { AdminProductsResponse, AdminProductData } from '@/types/admin'
 import { HookProduct, ProductsResponse as HookProductsResponse } from '@/types/hooks'
 
 type ProductsResponse = HookProductsResponse

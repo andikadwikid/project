@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Package, Tag, Palette, Ruler, BarChart3, Users, Layout } from 'lucide-react'
+import { Package, Tag, Palette, Ruler, BarChart3, Users, Layout, Percent } from 'lucide-react'
 import { useProducts } from '@/hooks/useProducts'
 import { useCategories } from '@/hooks/useCategories'
 import { useBrands } from '@/hooks/useBrands'
@@ -11,14 +11,13 @@ import { useColors } from '@/hooks/useColors'
 import { useSizes } from '@/hooks/useSizes'
 
 const AdminDashboardClient = () => {
-  const { products, loading: productsLoading, error: productsError } = useProducts()
+  const { products, loading: productsLoading, error: productsError } = useProducts({ limit: 5 })
   const { categories, loading: categoriesLoading, error: categoriesError } = useCategories()
   const { brands, loading: brandsLoading, error: brandsError } = useBrands()
   const { colors, loading: colorsLoading, error: colorsError } = useColors()
   const { sizes, loading: sizesLoading, error: sizesError } = useSizes()
 
-  // Check if any data is still loading
-  const isLoading = productsLoading || categoriesLoading || brandsLoading || colorsLoading || sizesLoading
+  // Loading states are available but not used in this component
 
   const adminCards = [
     {
@@ -68,6 +67,14 @@ const AdminDashboardClient = () => {
       href: '/admin/size-templates',
       count: '0',
       color: 'bg-teal-500',
+    },
+    {
+      title: 'Promotions',
+      description: 'Manage promotions and discounts',
+      icon: Percent,
+      href: '/admin/promotions',
+      count: '0',
+      color: 'bg-yellow-500',
     },
     {
       title: 'Users',

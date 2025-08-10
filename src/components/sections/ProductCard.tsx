@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, Star, ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -115,6 +115,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   Sale
                 </Badge>
               )}
+              {product.promotion && (
+                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs font-semibold">
+                  {product.promotion.discountType === 'percentage'
+                    ? `-${product.promotion.discountValue}%`
+                    : `-${formatPrice(product.promotion.discountValue)}`
+                  }
+                </Badge>
+              )}
             </div>
 
             {/* Wishlist Button - Hidden on mobile */}
@@ -153,6 +161,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               {product.brand.name}
             </p>
 
+
             {/* Product Name */}
             <Link href={`/product/${product.id}`}>
               <h3 className="font-semibold text-gray-900 hover:text-pink-600 transition-colors duration-200 line-clamp-2 text-sm md:text-base">
@@ -161,7 +170,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </Link>
 
             {/* Rating - Hidden on mobile */}
-            {product.rating && (
+            {/* {product.rating && (
               <div className="hidden md:flex items-center space-x-1">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
@@ -176,20 +185,47 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </div>
                 <span className="text-xs text-gray-500">({product.reviews})</span>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Price */}
-          <div className="flex flex-col md:flex-row items-center space-x-2 h-8 justify-center md:justify-start mt-auto">
-            <span className="text-sm md:text-lg font-bold text-gray-900">
-              {formatPrice(product.price)}
-            </span>
-            {product.originalPrice && (
-              <span className="text-xs md:text-sm text-gray-500 line-through">
-                {formatPrice(product.originalPrice)}
+          <div className="flex flex-col md:flex-row items-start space-x-2 gap-3 h-8 justify-center md:justify-start mt-auto">
+            {product.promotion && product.originalPrice ? (
+              <div className="flex flex-col md:flex-row items-start gap-1 md:gap-2">
+                <span className="text-sm md:text-lg font-bold text-red-600">
+                  {formatPrice(product.price)}
+                </span>
+                <div className='flex flex-row gap-2'>
+                  <span className="text-xs md:text-sm text-gray-500 line-through">
+                    {formatPrice(product.originalPrice)}
+                  </span>
+                  {product.promotion.discountType === 'percentage' && (
+                    <span className="text-xs text-green-600 font-medium">
+                      Save {product.promotion.discountValue}%
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <span className="text-sm md:text-lg font-bold text-gray-900">
+                {formatPrice(product.price)}
               </span>
             )}
           </div>
+
+          {/* Promotion Info - Show on all devices */}
+          {product.promotion && (
+            <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-lg p-2 my-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-orange-800">
+                  🎉 {product.promotion.title}
+                </span>
+                <Badge variant="outline" className="text-xs border-orange-300 text-orange-700">
+                  Limited Time
+                </Badge>
+              </div>
+            </div>
+          )}
 
           {/* Available Colors - Hidden on mobile */}
           {product.colors && product.colors.length > 0 && (
