@@ -5,16 +5,12 @@ import Image from 'next/image';
 import { ShoppingBag, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Product, ProductColor, ProductSize } from '@/types/product';
+import { ProductColor, ProductSize } from '@/types/product';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 
-interface ProductOptionsModalProps {
-  product: Product;
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { ProductOptionsModalProps } from '@/types/components';
 
 const ProductOptionsModal = ({ product, isOpen, onClose }: ProductOptionsModalProps) => {
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(

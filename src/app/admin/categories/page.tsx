@@ -23,12 +23,9 @@ import {
 import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-interface Category {
-  id: number
-  name: string
-  code: string
-  productCount: number
-}
+import { AdminCategory } from '@/types/admin';
+
+type Category = AdminCategory;
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState<Category[]>([])

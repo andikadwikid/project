@@ -1,19 +1,8 @@
 import { useState, useEffect } from 'react'
-
-interface Category {
-  id: number
-  code: string
-  name: string
-  productCount: number
-}
-
-interface CategoriesResponse {
-  success: boolean
-  data: Category[]
-}
+import { HookCategory, CategoriesResponse } from '@/types/hooks'
 
 export function useCategories() {
-  const [categories, setCategories] = useState<Category[]>([])
+  const [categories, setCategories] = useState<HookCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

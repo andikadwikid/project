@@ -1,27 +1,8 @@
-import { useState, useEffect } from 'react'
-import { Product } from '@/types/product'
-
-interface UseProductsParams {
-  category?: string
-  brand?: string
-  search?: string
-  page?: number
-  limit?: number
-}
-
-interface ProductsResponse {
-  success: boolean
-  data: Product[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
-}
+import { useState, useEffect } from 'react';
+import { UseProductsParams, ProductsResponse, HookProduct } from '@/types/hooks';
 
 export function useProducts(params: UseProductsParams = {}) {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<HookProduct[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pagination, setPagination] = useState({
@@ -55,8 +36,8 @@ export function useProducts(params: UseProductsParams = {}) {
         const result: ProductsResponse = await response.json()
         
         if (result.success) {
-          setProducts(result.data)
-          setPagination(result.pagination)
+          setProducts(result.data.products)
+          setPagination(result.data.pagination)
         } else {
           throw new Error('Failed to fetch products')
         }
@@ -71,13 +52,51 @@ export function useProducts(params: UseProductsParams = {}) {
     fetchProducts()
   }, [params.category, params.brand, params.search, params.page, params.limit])
 
+  const refetch = () => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const searchParams = new URLSearchParams()
+        
+        if (params.category) searchParams.set('category', params.category)
+        if (params.brand) searchParams.set('brand', params.brand)
+        if (params.search) searchParams.set('search', params.search)
+        if (params.page) searchParams.set('page', params.page.toString())
+        if (params.limit) searchParams.set('limit', params.limit.toString())
+
+        const url = `/api/products?${searchParams.toString()}`
+        const response = await fetch(url)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products')
+        }
+
+        const result: ProductsResponse = await response.json()
+        
+        if (result.success) {
+          setProducts(result.data.products)
+          setPagination(result.data.pagination)
+        } else {
+          throw new Error('Failed to fetch products')
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+        setProducts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }
+
   return {
     products,
     loading,
     error,
     pagination,
-    refetch: () => {
-      // Trigger re-fetch by updating a dependency
-    },
+    refetch,
   }
 }

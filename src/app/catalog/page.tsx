@@ -40,6 +40,11 @@ const CatalogPage = () => {
   const { categories, loading: categoriesLoading } = useCategories();
   const { brands, loading: brandsLoading } = useBrands();
 
+  // Reset page to 1 when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCategory, selectedBrand, searchTerm, priceRange]);
+
   // Apply client-side price filtering and sorting since API doesn't handle these yet
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
@@ -340,8 +345,12 @@ const CatalogPage = () => {
             {!productsLoading && (
               <div className="mb-6">
                 <p className="text-gray-600">
-                  Showing {filteredProducts.length} of {pagination.total} products
-                  {pagination.totalPages > 1 && ` (Page ${pagination.page} of ${pagination.totalPages})`}
+                  {priceRange || sortBy !== 'name' ? (
+                    `Showing ${filteredProducts.length} products (filtered from ${pagination.total} total)`
+                  ) : (
+                    `Showing ${products.length} of ${pagination.total} products`
+                  )}
+                  {pagination.totalPages > 1 && !priceRange && sortBy === 'name' && ` (Page ${pagination.page} of ${pagination.totalPages})`}
                 </p>
               </div>
             )}
@@ -393,7 +402,7 @@ const CatalogPage = () => {
             )}
 
             {/* Pagination */}
-            {!productsLoading && !productsError && pagination.totalPages > 1 && (
+            {!productsLoading && !productsError && filteredProducts.length > 0 && pagination.totalPages > 1 && (
               <div className="mt-8 flex justify-center items-center space-x-2">
                 <Button
                   variant="outline"

@@ -6,15 +6,11 @@ import { Heart, Star, ShoppingBag } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Product } from '@/types/product';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useState } from 'react';
 import ProductOptionsModal from '@/components/cart/ProductOptionsModal';
-
-interface ProductCardProps {
-  product: Product;
-}
+import { ProductCardProps } from '@/types/components';
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);

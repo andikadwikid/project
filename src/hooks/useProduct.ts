@@ -1,12 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Product } from '@/types/product'
-
-interface UseProductResult {
-  product: Product | null
-  loading: boolean
-  error: string | null
-  refetch: () => void
-}
+import { UseProductResult } from '@/types/hooks'
 
 export const useProduct = (id: string | number): UseProductResult => {
   const [product, setProduct] = useState<Product | null>(null)

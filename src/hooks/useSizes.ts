@@ -1,19 +1,8 @@
-import { useState, useEffect } from 'react'
-
-interface Size {
-  id: number
-  code: string
-  sizeLabel: string
-  cmValue: number | null
-}
-
-interface SizesResponse {
-  success: boolean
-  data: Size[]
-}
+import { useState, useEffect } from 'react';
+import { HookSize, SizesResponse } from '@/types/hooks';
 
 export function useSizes() {
-  const [sizes, setSizes] = useState<Size[]>([])
+  const [sizes, setSizes] = useState<HookSize[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

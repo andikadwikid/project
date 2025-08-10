@@ -1,19 +1,8 @@
-import { useState, useEffect } from 'react'
-
-interface Color {
-  id: number
-  code: string
-  colorName: string
-  hexCode: string
-}
-
-interface ColorsResponse {
-  success: boolean
-  data: Color[]
-}
+import { useState, useEffect } from 'react';
+import { HookColor, ColorsResponse } from '@/types/hooks';
 
 export function useColors() {
-  const [colors, setColors] = useState<Color[]>([])
+  const [colors, setColors] = useState<HookColor[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

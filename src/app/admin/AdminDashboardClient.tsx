@@ -17,13 +17,16 @@ const AdminDashboardClient = () => {
   const { colors, loading: colorsLoading, error: colorsError } = useColors()
   const { sizes, loading: sizesLoading, error: sizesError } = useSizes()
 
+  // Check if any data is still loading
+  const isLoading = productsLoading || categoriesLoading || brandsLoading || colorsLoading || sizesLoading
+
   const adminCards = [
     {
       title: 'Products',
       description: 'Manage product catalog',
       icon: Package,
       href: '/admin/products',
-      count: products.length.toString(),
+      count: (products || []).length.toString(),
       color: 'bg-blue-500',
     },
     {
@@ -31,7 +34,7 @@ const AdminDashboardClient = () => {
       description: 'Organize product categories',
       icon: Tag,
       href: '/admin/categories',
-      count: categories.length.toString(),
+      count: (categories || []).length.toString(),
       color: 'bg-green-500',
     },
     {
@@ -39,7 +42,7 @@ const AdminDashboardClient = () => {
       description: 'Manage brand information',
       icon: BarChart3,
       href: '/admin/brands',
-      count: brands.length.toString(),
+      count: (brands || []).length.toString(),
       color: 'bg-purple-500',
     },
     {
@@ -47,7 +50,7 @@ const AdminDashboardClient = () => {
       description: 'Manage product colors',
       icon: Palette,
       href: '/admin/colors',
-      count: colors.length.toString(),
+      count: (colors || []).length.toString(),
       color: 'bg-pink-500',
     },
     {
@@ -55,7 +58,7 @@ const AdminDashboardClient = () => {
       description: 'Manage product sizes',
       icon: Ruler,
       href: '/admin/sizes',
-      count: sizes.length.toString(),
+      count: (sizes || []).length.toString(),
       color: 'bg-orange-500',
     },
     {

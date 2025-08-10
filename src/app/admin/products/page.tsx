@@ -22,27 +22,19 @@ import {
 import { Plus, Edit, Trash2, Search, ArrowLeft, Upload, Download } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Product } from '@/types/product'
+import { AdminProductsResponse, AdminProductData } from '@/types/admin'
+import { HookProduct, ProductsResponse as HookProductsResponse } from '@/types/hooks'
 
-interface ProductsResponse {
-    success: boolean
-    data: Product[]
-    pagination: {
-        page: number
-        limit: number
-        total: number
-        totalPages: number
-    }
-}
+type ProductsResponse = HookProductsResponse
 
 const AdminProducts = () => {
-    const [products, setProducts] = useState<Product[]>([])
+    const [products, setProducts] = useState<HookProduct[]>([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-    const [productToDelete, setProductToDelete] = useState<Product | null>(null)
+    const [productToDelete, setProductToDelete] = useState<HookProduct | null>(null)
     const [importDialogOpen, setImportDialogOpen] = useState(false)
     const [excelFile, setExcelFile] = useState<File | null>(null)
     const [zipFile, setZipFile] = useState<File | null>(null)
@@ -71,8 +63,8 @@ const AdminProducts = () => {
             const data: ProductsResponse = await response.json()
 
             if (data.success) {
-                setProducts(data.data)
-                setTotalPages(data.pagination.totalPages)
+                setProducts(data.data.products)
+                setTotalPages(data.data.pagination.totalPages)
             }
         } catch (error) {
             console.error('Error fetching products:', error)
@@ -81,7 +73,7 @@ const AdminProducts = () => {
         }
     }
 
-    const handleDelete = async (product: Product) => {
+    const handleDelete = async (product: HookProduct) => {
         try {
             const response = await fetch(`/api/products/${product.id}`, {
                 method: 'DELETE'
@@ -245,15 +237,11 @@ const AdminProducts = () => {
                                             <TableRow key={product.id}>
                                                 <TableCell>
                                                     <Image
-                                                        src={product.image}
+                                                        src={product.image || product.images?.[0]?.imageUrl || '/images/placeholder.svg'}
                                                         alt={product.name}
                                                         width={48}
                                                         height={48}
                                                         className="w-12 h-12 object-cover rounded"
-                                                    // onError={(e) => {
-                                                    //     const target = e.target as HTMLImageElement
-                                                    //     target.src = '/images/placeholder.svg'
-                                                    // }}
                                                     />
                                                 </TableCell>
                                                 <TableCell>
@@ -266,29 +254,26 @@ const AdminProducts = () => {
                                                 <TableCell>{product.brand.name}</TableCell>
                                                 <TableCell>Rp {product.price.toLocaleString('id-ID')}</TableCell>
                                                 <TableCell>
-                                                    <div className="flex space-x-1">
-                                                        {product.colors?.slice(0, 3).map((color, index) => (
-                                                            <div
-                                                                key={color.id || index}
-                                                                className="w-4 h-4 rounded-full border border-gray-200"
-                                                                style={{ backgroundColor: color.hexCode }}
-                                                                title={color.colorName}
-                                                            />
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {(product.colors || []).slice(0, 3).map((color) => (
+                                                            <Badge key={color.id} variant="outline" className="text-xs" style={{backgroundColor: color.hexCode, color: color.hexCode === '#FFFFFF' || color.hexCode === '#ffffff' ? '#000' : '#fff'}}>
+                                                                {color.colorName}
+                                                            </Badge>
                                                         ))}
-                                                        {product.colors && product.colors.length > 3 && (
-                                                            <span className="text-xs text-gray-500">+{product.colors.length - 3}</span>
+                                                        {(product.colors || []).length > 3 && (
+                                                            <Badge variant="outline" className="text-xs">+{(product.colors || []).length - 3}</Badge>
                                                         )}
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-wrap gap-1">
-                                                        {product.sizes?.slice(0, 3).map((size, index) => (
-                                                            <Badge key={size.id || index} variant="outline" className="text-xs">
+                                                        {(product.sizes || []).slice(0, 3).map((size) => (
+                                                            <Badge key={size.id} variant="outline" className="text-xs">
                                                                 {size.sizeLabel}
                                                             </Badge>
                                                         ))}
-                                                        {product.sizes && product.sizes.length > 3 && (
-                                                            <span className="text-xs text-gray-500">+{product.sizes.length - 3}</span>
+                                                        {(product.sizes || []).length > 3 && (
+                                                            <Badge variant="outline" className="text-xs">+{(product.sizes || []).length - 3}</Badge>
                                                         )}
                                                     </div>
                                                 </TableCell>

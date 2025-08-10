@@ -33,8 +33,8 @@ model Brand {
 
 model Product {
   id          Int            @id @default(autoincrement())
-  code        String         @unique
-  name        String
+  code        String
+  name        String         @unique
   description String?
   categoryId  Int            @map("category_id")
   brandId     Int            @map("brand_id")

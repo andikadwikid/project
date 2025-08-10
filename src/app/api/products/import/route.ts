@@ -8,24 +8,7 @@ import { existsSync } from 'fs'
 
 // Using @types/adm-zip for type definitions
 
-interface ExcelRow {
-  name: string
-  code: string
-  description?: string
-  categoryCode: string
-  brandCode: string
-  price: string
-  colorCodes?: string // comma-separated color codes
-  sizeCodes?: string // comma-separated size codes
-  imageUrls?: string // comma-separated image filenames from ZIP
-  isActive?: string
-}
-
-interface ProcessedImage {
-  filename: string
-  url: string
-  buffer: Buffer
-}
+import { ExcelRow, ProcessedImage } from '@/types/admin';
 
 // Function to extract and process images from ZIP file
 async function extractImagesFromZip(
@@ -234,12 +217,14 @@ export async function POST(request: NextRequest) {
           throw new Error(`Row ${rowNumber}: Missing required fields (name, code, categoryCode, brandCode, price)`)
         }
 
-        // Validate product code is unique
-        const existingProduct = await prisma.product.findUnique({
-          where: { code: row.code }
+        // Note: Product code uniqueness validation removed to allow duplicate codes
+
+        // Check for duplicate product name
+        const existingProductByName = await prisma.product.findUnique({
+          where: { name: row.name }
         })
-        if (existingProduct) {
-          throw new Error(`Row ${rowNumber}: Product code '${row.code}' already exists`)
+        if (existingProductByName) {
+          throw new Error(`Row ${rowNumber}: Product with name '${row.name}' already exists. Product names must be unique.`)
         }
 
         // Validate category exists
@@ -375,7 +360,25 @@ export async function POST(request: NextRequest) {
         results.success++
       } catch (error) {
         results.failed++
-        const errorMessage = error instanceof Error ? error.message : `Row ${rowNumber}: Unknown error`
+        let errorMessage = `Row ${rowNumber}: Unknown error`
+        
+        if (error instanceof Error) {
+          // Handle Prisma database errors
+          if (error.message.includes('Unique constraint failed')) {
+            if (error.message.includes('products_name_key')) {
+              errorMessage = `Row ${rowNumber}: Product with name '${row.name}' already exists. Product names must be unique.`
+            } else if (error.message.includes('products_code_key')) {
+              errorMessage = `Row ${rowNumber}: Product with code '${row.code}' already exists. Product codes must be unique.`
+            } else {
+              errorMessage = `Row ${rowNumber}: Duplicate data found - ${error.message}`
+            }
+          } else if (error.message.includes('Foreign key constraint failed')) {
+            errorMessage = `Row ${rowNumber}: Invalid reference data - please check category, brand, color, or size codes`
+          } else {
+            errorMessage = error.message
+          }
+        }
+        
         results.errors.push(errorMessage)
         console.error(`Import error for row ${rowNumber}:`, error)
       }

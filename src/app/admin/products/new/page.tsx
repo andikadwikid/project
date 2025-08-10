@@ -19,49 +19,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FileUpload } from '@/components/ui/file-upload'
 
-interface Category {
-  id: number
-  name: string
-  code: string
-}
+import { AdminCategory, AdminBrand, AdminColor, AdminSize, SizeTemplate } from '@/types/admin';
 
-interface Brand {
-  id: number
-  name: string
-  code: string
-}
-
-interface Color {
-  id: number
-  name: string
-  hexCode: string
-  code: string
-}
-
-interface Size {
-  id: number
-  sizeLabel: string
-  code: string
-  cmValue?: number
-}
-
-interface SizeTemplateItem {
-  id: number
-  sizeId: number
-  cmValue: number
-  sortOrder: number
-  size: {
-    id: number
-    sizeLabel: string
-  }
-}
-
-interface SizeTemplate {
-  id: number
-  name: string
-  description?: string
-  templateSizes: SizeTemplateItem[]
-}
+type Category = AdminCategory;
+type Brand = AdminBrand;
+type Color = AdminColor;
+type Size = AdminSize;
 
 const NewProduct = () => {
   const router = useRouter()

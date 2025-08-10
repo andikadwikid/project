@@ -23,13 +23,9 @@ import {
 import { Plus, Edit, ArrowLeft, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
-interface Color {
-  id: number
-  name: string
-  hexCode: string
-  code: string
-  productCount: number
-}
+import { AdminColor } from '@/types/admin';
+
+type Color = AdminColor;
 
 const AdminColors = () => {
   const [colors, setColors] = useState<Color[]>([])

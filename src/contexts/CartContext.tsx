@@ -1,44 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { Product, ProductColor, ProductSize } from '@/types/product';
-
-export interface CartItem {
-  id: string;
-  product: Product;
-  quantity: number;
-  selectedColor?: ProductColor;
-  selectedSize?: ProductSize;
-  price: number;
-}
-
-interface CartState {
-  items: CartItem[];
-  total: number;
-  itemCount: number;
-  isOpen: boolean;
-}
-
-type CartAction =
-  | { type: 'ADD_ITEM'; payload: Omit<CartItem, 'id'> }
-  | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
-  | { type: 'CLEAR_CART' }
-  | { type: 'TOGGLE_CART' }
-  | { type: 'OPEN_CART' }
-  | { type: 'CLOSE_CART' }
-  | { type: 'LOAD_CART'; payload: CartItem[] };
-
-interface CartContextType {
-  state: CartState;
-  addItem: (item: Omit<CartItem, 'id'>) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
-  clearCart: () => void;
-  toggleCart: () => void;
-  openCart: () => void;
-  closeCart: () => void;
-}
+import { CartItem, CartState, CartAction, CartContextType } from '@/types/components';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 

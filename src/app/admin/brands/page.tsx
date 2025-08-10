@@ -23,12 +23,9 @@ import {
 import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-interface Brand {
-  id: number
-  name: string
-  code: string
-  productCount: number
-}
+import { AdminBrand } from '@/types/admin';
+
+type Brand = AdminBrand;
 
 const AdminBrands = () => {
   const [brands, setBrands] = useState<Brand[]>([])

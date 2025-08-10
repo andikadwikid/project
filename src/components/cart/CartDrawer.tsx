@@ -13,10 +13,7 @@ import {
   DrawerClose,
 } from '@/components/ui/drawer';
 
-interface CartDrawerProps {
-  isOpen: boolean;
-  closeCart: () => void;
-}
+import { CartDrawerProps } from '@/types/components';
 
 export default function CartDrawer({ isOpen, closeCart }: CartDrawerProps) {
   const { state, updateQuantity, removeItem, clearCart } = useCart();

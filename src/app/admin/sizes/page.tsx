@@ -23,12 +23,9 @@ import {
 import { Plus, Edit, Trash2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-interface Size {
-  id: number
-  sizeLabel: string
-  code: string
-  productCount: number
-}
+import { AdminSize } from '@/types/admin';
+
+type Size = AdminSize;
 
 const AdminSizes = () => {
   const [sizes, setSizes] = useState<Size[]>([])

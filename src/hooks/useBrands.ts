@@ -1,19 +1,8 @@
 import { useState, useEffect } from 'react'
-
-interface Brand {
-  id: number
-  code: string
-  name: string
-  productCount: number
-}
-
-interface BrandsResponse {
-  success: boolean
-  data: Brand[]
-}
+import { HookBrand, BrandsResponse } from '@/types/hooks'
 
 export function useBrands() {
-  const [brands, setBrands] = useState<Brand[]>([])
+  const [brands, setBrands] = useState<HookBrand[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

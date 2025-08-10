@@ -4,21 +4,7 @@ import React, { useState, useRef } from 'react'
 import { X, Upload } from 'lucide-react'
 import Image from 'next/image'
 
-interface FileUploadProps {
-  onUpload: (urls: string[]) => void
-  existingImages?: string[]
-  maxFiles?: number
-  folder?: string
-  className?: string
-  accept?: string
-  maxSize?: number
-}
-
-interface UploadedFile {
-  url: string
-  filename: string
-  uploading?: boolean
-}
+import { FileUploadProps, UploadedFile } from '@/types/components';
 
 export function FileUpload({ 
   onUpload, 

@@ -21,72 +21,14 @@ import { useRouter, useParams } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { FileUpload } from '@/components/ui/file-upload'
 
-interface Category {
-  id: number
-  name: string
-  code: string
-}
+import { AdminCategory, AdminBrand, AdminColor, AdminSize, SizeTemplate, AdminProductImage, AdminProductData } from '@/types/admin';
 
-interface Brand {
-  id: number
-  name: string
-  code: string
-}
-
-interface Color {
-  id: number
-  name: string
-  hexCode: string
-  code: string
-}
-
-interface Size {
-  id: number
-  sizeLabel: string
-  code: string
-  cmValue?: number
-  pivotId?: number
-}
-
-interface SizeTemplateItem {
-  id: number
-  sizeId: number
-  cmValue: number
-  size: {
-    id: number
-    sizeLabel: string
-  }
-}
-
-interface SizeTemplate {
-  id: number
-  name: string
-  description?: string
-  templateSizes: SizeTemplateItem[]
-}
-
-interface ProductImage {
-  id: number
-  imageUrl: string
-  isPrimary: boolean
-  sortOrder: number
-}
-
-interface ProductData {
-  id: number
-  code: string
-  name: string
-  description: string
-  price: number
-  categoryId: number
-  brandId: number
-  isActive: boolean
-  category: { id: number; name: string; code: string }
-  brand: { id: number; name: string; code: string }
-  colors: Color[]
-  sizes: Size[]
-  images: { id: number; imageUrl: string; isPrimary: boolean; sortOrder: number }[]
-}
+type Category = AdminCategory;
+type Brand = AdminBrand;
+type Color = AdminColor;
+type Size = AdminSize;
+type ProductImage = AdminProductImage;
+type ProductData = AdminProductData;
 
 const EditProduct = () => {
   const router = useRouter()

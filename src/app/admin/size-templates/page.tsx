@@ -14,27 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Plus, Edit, Save, X } from 'lucide-react'
 import { toast } from 'sonner'
 
-interface Size {
-  id: number
-  code: string
-  sizeLabel: string
-  cmValue?: string
-}
+import { AdminSize, SizeTemplateItem, SizeTemplate } from '@/types/admin';
 
-interface SizeTemplateItem {
-  id?: number
-  sizeId: number
-  cmValue: number
-  sortOrder: number
-  size?: Size
-}
-
-interface SizeTemplate {
-  id: number
-  name: string
-  description?: string
-  templateSizes: SizeTemplateItem[]
-}
+type Size = AdminSize;
 
 const AdminSizeTemplates = () => {
   const [templates, setTemplates] = useState<SizeTemplate[]>([])
