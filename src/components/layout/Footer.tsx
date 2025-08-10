@@ -1,80 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Instagram, Facebook, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const footer = footerRef.current;
-    const content = contentRef.current;
-    const bottom = bottomRef.current;
-
-    if (!footer || !content || !bottom) return;
-
-    // Set initial states
-    gsap.set([content, bottom], { opacity: 0, y: 50 });
-
-    // Scroll-triggered animation
-    ScrollTrigger.create({
-      trigger: footer,
-      start: "top 80%",
-      onEnter: () => {
-        const tl = gsap.timeline();
-        tl.to(content, {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power2.out"
-        })
-          .to(bottom, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out"
-          }, "-=0.4");
-      }
-    });
-
-    // Add hover animations for social links
-    const socialLinks = footer.querySelectorAll('.social-link');
-    socialLinks.forEach((link) => {
-      link.addEventListener('mouseenter', () => {
-        gsap.to(link, {
-          scale: 1.1,
-          rotation: 5,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      });
-
-      link.addEventListener('mouseleave', () => {
-        gsap.to(link, {
-          scale: 1,
-          rotation: 0,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      });
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
 
   return (
-    <footer ref={footerRef} className="bg-gradient-to-br from-pink-50 to-rose-50 border-t" role="contentinfo">
-      <div ref={contentRef} className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="bg-gradient-to-br from-pink-50 to-rose-50 border-t" role="contentinfo">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <section className="space-y-4" aria-labelledby="brand-heading">
@@ -91,13 +25,13 @@ const Footer = () => {
               Temukan sepatu impian Anda di Femme Steps.
             </p>
             <div className="flex space-x-4" role="list" aria-label="Social media links">
-              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Instagram">
+              <Link href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Instagram">
                 <Instagram className="h-5 w-5" aria-hidden="true" />
               </Link>
-              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Facebook">
+              <Link href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Facebook">
                 <Facebook className="h-5 w-5" aria-hidden="true" />
               </Link>
-              <Link href="#" className="social-link text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Twitter">
+              <Link href="#" className="text-gray-400 hover:text-pink-500 transition-colors" aria-label="Follow us on Twitter">
                 <Twitter className="h-5 w-5" aria-hidden="true" />
               </Link>
             </div>
@@ -189,7 +123,7 @@ const Footer = () => {
 
         <Separator className="my-8" />
 
-        <div ref={bottomRef} className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-gray-600 text-sm">
             © 2024 Femme Steps. All rights reserved.
           </p>
