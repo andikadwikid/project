@@ -1,0 +1,46 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#gradient2)"/>
+  
+  <!-- Decorative stars -->
+  <g fill="rgba(255,255,255,0.2)">
+    <polygon points="50,50 55,65 70,65 58,75 63,90 50,80 37,90 42,75 30,65 45,65" />
+    <polygon points="350,80 353,88 361,88 355,93 358,101 350,96 342,101 345,93 339,88 347,88" />
+    <polygon points="80,200 83,208 91,208 85,213 88,221 80,216 72,221 75,213 69,208 77,208" />
+  </g>
+  
+  <!-- Weekend banner -->
+  <g transform="translate(120, 100)">
+    <rect x="0" y="0" width="160" height="80" rx="12" fill="rgba(255,255,255,0.9)"/>
+    <text x="80" y="25" text-anchor="middle" fill="#2563eb" font-family="Arial, sans-serif" font-size="16" font-weight="bold">WEEKEND</text>
+    <text x="80" y="45" text-anchor="middle" fill="#2563eb" font-family="Arial, sans-serif" font-size="14">SPECIAL</text>
+    <text x="80" y="65" text-anchor="middle" fill="#7c3aed" font-family="Arial, sans-serif" font-size="18" font-weight="bold">UP TO 70%</text>
+  </g>
+  
+  <!-- Clock icon -->
+  <g transform="translate(300, 180)">
+    <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    <line x1="20" y1="20" x2="20" y2="10" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+    <line x1="20" y1="20" x2="28" y2="20" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Gift box -->
+  <g transform="translate(60, 160)">
+    <rect x="0" y="10" width="30" height="25" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+    <rect x="12" y="0" width="6" height="35" fill="rgba(255,255,255,0.3)"/>
+    <rect x="0" y="18" width="30" height="6" fill="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Floating elements -->
+  <circle cx="380" cy="50" r="8" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="30" cy="80" r="12" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="370" cy="250" r="10" fill="rgba(255,255,255,0.15)"/>
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

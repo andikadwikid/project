@@ -1,0 +1,56 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#gradient3)"/>
+  
+  <!-- Decorative leaves -->
+  <g fill="rgba(255,255,255,0.2)">
+    <ellipse cx="60" cy="60" rx="8" ry="15" transform="rotate(45 60 60)"/>
+    <ellipse cx="340" cy="80" rx="6" ry="12" transform="rotate(-30 340 80)"/>
+    <ellipse cx="80" cy="220" rx="7" ry="14" transform="rotate(60 80 220)"/>
+    <ellipse cx="350" cy="240" rx="5" ry="10" transform="rotate(-45 350 240)"/>
+  </g>
+  
+  <!-- New Collection banner -->
+  <g transform="translate(100, 90)">
+    <rect x="0" y="0" width="200" height="90" rx="15" fill="rgba(255,255,255,0.9)"/>
+    <text x="100" y="25" text-anchor="middle" fill="#059669" font-family="Arial, sans-serif" font-size="12" font-weight="bold">NEW ARRIVAL</text>
+    <text x="100" y="45" text-anchor="middle" fill="#059669" font-family="Arial, sans-serif" font-size="18" font-weight="bold">COLLECTION</text>
+    <text x="100" y="65" text-anchor="middle" fill="#0d9488" font-family="Arial, sans-serif" font-size="14">Special Price</text>
+    <text x="100" y="80" text-anchor="middle" fill="#0d9488" font-family="Arial, sans-serif" font-size="12">Limited Time</text>
+  </g>
+  
+  <!-- Sparkle effects -->
+  <g fill="rgba(255,255,255,0.4)">
+    <polygon points="120,50 122,56 128,56 123,60 125,66 120,62 115,66 117,60 112,56 118,56" />
+    <polygon points="280,120 281,124 285,124 282,126 283,130 280,128 277,130 278,126 275,124 279,124" />
+    <polygon points="320,200 322,206 328,206 323,210 325,216 320,212 315,216 317,210 312,206 318,206" />
+    <polygon points="90,180 91,184 95,184 92,186 93,190 90,188 87,190 88,186 85,184 89,184" />
+  </g>
+  
+  <!-- Shopping tag -->
+  <g transform="translate(280, 160)">
+    <path d="M0 10 L20 10 L25 15 L20 20 L0 20 Z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+    <circle cx="5" cy="15" r="2" fill="rgba(255,255,255,0.6)"/>
+  </g>
+  
+  <!-- Geometric shapes -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none">
+    <rect x="30" y="120" width="20" height="20" transform="rotate(45 40 130)"/>
+    <circle cx="360" cy="160" r="15"/>
+    <polygon points="50,250 60,230 70,250 60,270"/>
+  </g>
+  
+  <!-- Floating bubbles -->
+  <circle cx="150" cy="40" r="6" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="250" cy="60" r="4" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="180" cy="250" r="8" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="320" cy="280" r="5" fill="rgba(255,255,255,0.15)"/>
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d9488;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

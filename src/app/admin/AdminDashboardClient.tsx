@@ -77,6 +77,14 @@ const AdminDashboardClient = () => {
       color: 'bg-yellow-500',
     },
     {
+      title: 'Promo Banners',
+      description: 'Manage promotional banners',
+      icon: Layout,
+      href: '/admin/promo-banners',
+      count: '0',
+      color: 'bg-indigo-500',
+    },
+    {
       title: 'Users',
       description: 'Manage user accounts',
       icon: Users,

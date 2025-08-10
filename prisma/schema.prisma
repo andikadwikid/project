@@ -176,3 +176,18 @@ model PromoProduct {
   @@unique([promotionId, productId])
   @@map("promo_products")
 }
+
+model PromoBanner {
+  id          Int      @id @default(autoincrement())
+  title       String
+  subtitle    String?
+  description String?
+  imageUrl    String   @map("image_url")
+  linkUrl     String?  @map("link_url")
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("promo_banners")
+}

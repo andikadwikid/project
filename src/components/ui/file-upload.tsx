@@ -187,42 +187,44 @@ export function FileUpload({
 
       {/* File Preview */}
       {files.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {files.map((file, index) => (
-            <div key={index} className="relative group">
-              <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                {file.uploading ? (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  </div>
-                ) : (
-                  <Image
-                    src={file.url}
-                    alt={file.filename}
-                    fill
-                    className="object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = '/images/placeholder.svg'
-                    }}
-                  />
+        <div className="max-h-60 overflow-y-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {files.map((file, index) => (
+              <div key={index} className="relative group">
+                <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                  {file.uploading ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    </div>
+                  ) : (
+                    <Image
+                      src={file.url}
+                      alt={file.filename}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.src = '/images/placeholder.svg'
+                      }}
+                    />
+                  )}
+                </div>
+                
+                {!file.uploading && (
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 )}
+                
+                <p className="mt-1 text-xs text-gray-500 truncate">
+                  {file.filename}
+                </p>
               </div>
-              
-              {!file.uploading && (
-                <button
-                  onClick={() => removeFile(index)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-              
-              <p className="mt-1 text-xs text-gray-500 truncate">
-                {file.filename}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>
