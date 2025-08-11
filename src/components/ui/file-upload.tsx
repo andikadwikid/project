@@ -67,21 +67,26 @@ export function FileUpload({
         const result = await response.json()
 
         if (result.success) {
-          setFiles(prev => prev.map((f, index) => {
-            if (index === prev.length - newFiles.length + i) {
-              // Revoke the object URL to free memory
-              URL.revokeObjectURL(f.url)
-              return {
-                url: result.data.url,
-                filename: result.data.filename,
-                uploading: false
+          setFiles(prev => {
+            const updatedFiles = prev.map((f, index) => {
+              if (index === prev.length - newFiles.length + i) {
+                // Revoke the object URL to free memory
+                URL.revokeObjectURL(f.url)
+                return {
+                  url: result.data.url,
+                  filename: result.data.filename,
+                  uploading: false
+                }
               }
-            }
-            return f
-          }))
-          
-          // Call onUpload with the new URL
-          onUpload([result.data.url])
+              return f
+            })
+            
+            // Call onUpload with all uploaded URLs
+            const allUploadedUrls = updatedFiles.filter((f: UploadedFile) => !f.uploading).map((f: UploadedFile) => f.url)
+            onUpload(allUploadedUrls)
+            
+            return updatedFiles
+          })
         } else {
           // Remove failed upload
           setFiles(prev => prev.filter((_, index) => index !== prev.length - newFiles.length + i))
