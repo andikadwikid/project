@@ -1,5 +1,6 @@
 import HeroSection from '@/components/sections/HeroSection';
 import CategoriesSection from '@/components/sections/CategoriesSection';
+import ProductGridSection from '@/components/sections/ProductGridSection';
 
 export default function Home() {
   return (
@@ -49,6 +50,13 @@ export default function Home() {
       </section>
       <section aria-label="Product categories">
         <CategoriesSection />
+      </section>
+      <section aria-label="Product showcase with scroll pinning">
+        <ProductGridSection 
+          title="Koleksi Terbaru"
+          subtitle="Temukan produk-produk pilihan terbaik kami dengan teknologi terdepan"
+          heroImage="/images/hero-shoes.svg"
+        />
       </section>
     </>
   );

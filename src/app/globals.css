@@ -1,6 +1,68 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent layout shift during GSAP animations */
+.gsap-pinned {
+  will-change: transform;
+  position: relative;
+  z-index: 10;
+}
+
+/* Optimize performance for animations */
+.product-card {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* ScrollTrigger specific styles */
+.pin-spacer {
+  overflow: visible !important;
+}
+
+/* Ensure proper stacking context for pinned elements */
+[data-pin-spacer] {
+  z-index: 1;
+}
+
+/* Fix for GSAP pinned elements */
+.gsap-pin-start {
+  position: relative;
+}
+
+/* Smooth transitions for scroll effects */
+.scroll-section {
+  position: relative;
+  overflow-x: hidden;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
