@@ -5,6 +5,9 @@ import ProductGridSection from '@/components/sections/ProductGridSection';
 export default function Home() {
   return (
     <>
+      <div className="w-full py-2.5 font-medium text-sm text-white text-center bg-gradient-to-r from-violet-500 via-[#9938CA] to-[#E0724A]">
+        <p>Special Deal: Free Shipping on Orders Above $50! | 20% OFF on First Purchase</p>
+      </div>
       <section aria-label="Hero banner">
         <HeroSection />
       </section>
@@ -52,7 +55,7 @@ export default function Home() {
         <CategoriesSection />
       </section>
       <section aria-label="Product showcase with scroll pinning">
-        <ProductGridSection 
+        <ProductGridSection
           title="Koleksi Terbaru"
           subtitle="Temukan produk-produk pilihan terbaik kami dengan teknologi terdepan"
           heroImage="/images/hero-shoes.svg"

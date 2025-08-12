@@ -36,31 +36,31 @@ const HeroSection = () => {
       duration: 1,
       ease: "power3.out"
     })
-    .to(subtitleRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out"
-    }, "-=0.5")
-    .to(buttonsRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out"
-    }, "-=0.4")
-    .to(statsRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out"
-    }, "-=0.4")
-    .to(imageRef.current, {
-      opacity: 1,
-      scale: 1,
-      rotation: 0,
-      duration: 1.2,
-      ease: "elastic.out(1, 0.5)"
-    }, "-=0.8");
+      .to(subtitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      }, "-=0.5")
+      .to(buttonsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      }, "-=0.4")
+      .to(statsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      }, "-=0.4")
+      .to(imageRef.current, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1.2,
+        ease: "elastic.out(1, 0.5)"
+      }, "-=0.8");
 
     // Floating animation for decorative elements
     gsap.to(".floating-element", {
@@ -83,7 +83,7 @@ const HeroSection = () => {
       <div className="floating-element absolute bottom-32 right-20 w-16 h-16 bg-rose-200 rounded-full opacity-30" aria-hidden="true" />
       <div className="floating-element absolute top-1/2 right-10 w-12 h-12 bg-purple-200 rounded-full opacity-25" aria-hidden="true" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <header className="space-y-8">
