@@ -70,7 +70,7 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    
+
     // Validation for products with colors
     if (product.colors && product.colors.length > 0 && !selectedColor) {
       toast.error('Please select a color');
@@ -391,7 +391,7 @@ const ProductDetailPage = () => {
                         </div>
 
                         {/* Measurement Guide */}
-                        <div className="space-y-4">
+                        {/* <div className="space-y-4">
                           <h4 className="font-medium text-gray-900">How to Measure</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
                             <div>
@@ -411,10 +411,10 @@ const ProductDetailPage = () => {
                               <p>Measure from the highest point of your shoulder to the desired length.</p>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
 
                         {/* Tips */}
-                        <div className="bg-pink-50 p-4 rounded-lg">
+                        {/* <div className="bg-pink-50 p-4 rounded-lg">
                           <h4 className="font-medium text-pink-900 mb-2">Sizing Tips</h4>
                           <ul className="text-sm text-pink-800 space-y-1">
                             <li>• For the best fit, have someone help you measure</li>
@@ -422,7 +422,7 @@ const ProductDetailPage = () => {
                             <li>• If you&apos;re between sizes, we recommend sizing up</li>
                             <li>• Check the fabric composition for stretch information</li>
                           </ul>
-                        </div>
+                        </div> */}
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -582,8 +582,8 @@ const ProductDetailPage = () => {
                     key={image.id}
                     onClick={() => setSelectedImageIndex(index)}
                     className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${selectedImageIndex === index
-                        ? 'border-pink-500'
-                        : 'border-gray-600 hover:border-gray-400'
+                      ? 'border-pink-500'
+                      : 'border-gray-600 hover:border-gray-400'
                       }`}
                   >
                     <Image
